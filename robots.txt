@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /grazie/
+Disallow: /research/
+
+Sitemap: https://damianococcioli.it/sitemap.xml

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#003F87" />
+  <meta name="robots" content="noindex, follow" />
+  <title>Grazie · Damiano Coccioli · Moncalieri 2026</title>
+  <link rel="canonical" href="https://damianococcioli.it/grazie/" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%23003F87'/><text x='32' y='44' font-family='Arial Black,Impact,sans-serif' font-size='34' font-weight='900' fill='%23F2C200' text-anchor='middle' letter-spacing='-1'>DC</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;700&family=Archivo+Black&display=swap" />
+  <style>
+    :root {
+      --c-azzurro-deep: #003F87; --c-azzurro-night: #001E45; --c-oro: #F2C200;
+      --c-grafite: #1A2230; --c-grafite-soft: #4A5363;
+      --f-serif: "Fraunces", Georgia, serif; --f-sans: "Inter", system-ui, sans-serif;
+      --f-display: "Archivo Black", sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; min-height: 100dvh; font-family: var(--f-sans); display: flex; flex-direction: column; background: linear-gradient(135deg, var(--c-azzurro-night) 0%, var(--c-azzurro-deep) 100%); color: white; }
+    a { color: var(--c-oro); }
+    main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 24px; text-align: center; }
+    .card { max-width: 560px; padding: 24px; }
+    .icon { width: 96px; height: 96px; margin: 0 auto 24px; background: var(--c-oro); color: var(--c-azzurro-night); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 48px; }
+    h1 { font-family: var(--f-serif); font-style: italic; font-size: clamp(36px, 6vw, 64px); margin: 0 0 16px; line-height: 1.1; }
+    p { font-size: 18px; line-height: 1.6; color: rgba(255,255,255,0.85); margin: 0 0 16px; }
+    .actions { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-top: 32px; }
+    .btn { display: inline-flex; align-items: center; gap: 8px; padding: 14px 28px; border-radius: 999px; font-weight: 600; font-size: 16px; text-decoration: none; font-family: var(--f-sans); border: 2px solid transparent; }
+    .btn--primary { background: var(--c-oro); color: var(--c-azzurro-night); border-color: var(--c-oro); }
+    .btn--primary:hover { transform: translateY(-2px); }
+    .btn--ghost { background: transparent; color: white; border-color: rgba(255,255,255,0.5); }
+    .btn--ghost:hover { background: rgba(255,255,255,0.1); }
+    footer { padding: 24px; text-align: center; font-size: 12px; color: rgba(255,255,255,0.5); }
+    footer a { color: rgba(255,255,255,0.7); }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="card">
+      <div class="icon" aria-hidden="true">✓</div>
+      <h1>Grazie.</h1>
+      <p>Il tuo messaggio è arrivato. Ti rispondiamo appena possibile — di solito entro 24 ore.</p>
+      <p>Nel frattempo, se vuoi davvero darci una mano, condividi <a href="../come-votare/">come si vota</a> con chi conosci a Moncalieri. Sono i prossimi due giorni a contare.</p>
+      <div class="actions">
+        <a href="../come-votare/" class="btn btn--primary">Condividi come votare →</a>
+        <a href="../" class="btn btn--ghost">Torna alla home</a>
+      </div>
+    </div>
+  </main>
+  <footer>
+    <p>© 2026 Comitato elettorale Damiano Coccioli · <a href="../privacy/">Privacy</a> · <a href="../cookie/">Cookie</a></p>
+  </footer>
+</body>
+</html>

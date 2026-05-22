@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="it" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#003F87" />
+  <meta name="robots" content="index,follow" />
+
+  <title>Moncalieri Cambia! — Il programma del centrodestra · Damiano Coccioli</title>
+  <meta name="description" content="Il programma elettorale completo della coalizione di centrodestra che sostiene Maurizio Fontana per Sindaco di Moncalieri. 14 priorità concrete, scritte da chi conosce la città." />
+
+  <link rel="canonical" href="https://damianococcioli.it/programma-completo/" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article" />
+  <meta property="og:locale" content="it_IT" />
+  <meta property="og:url" content="https://damianococcioli.it/programma-completo/" />
+  <meta property="og:title" content="Moncalieri Cambia! — Il programma del centrodestra" />
+  <meta property="og:description" content="14 priorità concrete per Moncalieri. La coalizione di centrodestra che sostiene Maurizio Fontana Sindaco. Vota il 24 e 25 maggio 2026." />
+  <meta property="og:image" content="https://damianococcioli.it/assets/img/programma_centrodestra.jpg" />
+  <meta property="article:published_time" content="2026-04-11T00:00:00+02:00" />
+  <meta property="article:modified_time" content="2026-05-22T12:00:00+02:00" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Moncalieri Cambia! — Il programma del centrodestra" />
+  <meta name="twitter:description" content="14 priorità concrete per Moncalieri." />
+  <meta name="twitter:image" content="https://damianococcioli.it/assets/img/programma_centrodestra.jpg" />
+
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%23003F87'/><text x='32' y='44' font-family='Arial Black,Impact,sans-serif' font-size='34' font-weight='900' fill='%23F2C200' text-anchor='middle' letter-spacing='-1'>DC</text></svg>" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,400;1,9..144,600&family=Inter:wght@400;500;600;700&family=Archivo+Black&display=swap" />
+
+  <!-- Structured data: Article -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Moncalieri Cambia! — Il programma del centrodestra",
+    "description": "Il programma elettorale completo della coalizione di centrodestra a Moncalieri 2026.",
+    "datePublished": "2026-04-11",
+    "dateModified": "2026-05-22",
+    "author": {"@type": "Organization", "name": "Coalizione di centrodestra Moncalieri"},
+    "publisher": {"@type": "Organization", "name": "Forza Italia Moncalieri", "logo": {"@type": "ImageObject", "url": "https://damianococcioli.it/assets/img/og_default.jpg"}},
+    "image": "https://damianococcioli.it/assets/img/programma_centrodestra.jpg",
+    "mainEntityOfPage": "https://damianococcioli.it/programma-completo/"
+  }
+  </script>
+
+  <style>
+  /* =========================================================================
+     PROGRAMMA — Editorial longform stylesheet
+     Token-aligned with the main site. Magazine sensibility.
+     ========================================================================= */
+  :root {
+    --c-azzurro: #0096D6;
+    --c-azzurro-deep: #003F87;
+    --c-azzurro-night: #001E45;
+    --c-oro: #F2C200;
+    --c-oro-deep: #C69900;
+    --c-lilla: #B6A6CA;
+    --c-lilla-soft: #E2DBEC;
+    --c-bianco: #FFFFFF;
+    --c-grigio-cielo: #F4F7FB;
+    --c-grigio-bordo: #E1E8F2;
+    --c-grafite: #1A2230;
+    --c-grafite-soft: #4A5363;
+    --c-grafite-muted: #7A8499;
+    --f-serif: "Fraunces", "Times New Roman", Georgia, serif;
+    --f-sans:  "Inter", system-ui, -apple-system, sans-serif;
+    --f-display: "Archivo Black", "Inter", sans-serif;
+    --s-1: 4px; --s-2: 8px; --s-3: 12px; --s-4: 16px; --s-5: 20px;
+    --s-6: 24px; --s-8: 32px; --s-10: 40px; --s-12: 48px;
+    --s-16: 64px; --s-20: 80px; --s-24: 96px; --s-32: 128px;
+    --r-sm: 4px; --r-md: 10px; --r-lg: 20px; --r-pill: 999px;
+    --shadow-1: 0 2px 8px rgba(26,34,48,.08);
+    --shadow-2: 0 12px 32px rgba(0,63,135,.12);
+    --motion-fast: 150ms cubic-bezier(.2,.8,.2,1);
+    --motion-base: 280ms cubic-bezier(.2,.8,.2,1);
+    --header-h: 56px;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    font-family: var(--f-sans); font-size: var(--t-16, 16px);
+    line-height: 1.65; color: var(--c-grafite);
+    background: var(--c-grigio-cielo);
+  }
+  img { max-width: 100%; height: auto; display: block; }
+  a { color: var(--c-azzurro-deep); text-decoration: none; transition: color var(--motion-fast); }
+  a:hover { color: var(--c-azzurro); }
+  a:focus-visible { outline: 3px solid var(--c-oro); outline-offset: 3px; border-radius: 2px; }
+  h1, h2, h3, h4 { font-family: var(--f-serif); font-weight: 700; line-height: 1.15; margin: 0; color: var(--c-azzurro-night); letter-spacing: -0.01em; }
+  p { margin: 0 0 1em; }
+  ::selection { background: var(--c-oro); color: var(--c-azzurro-night); }
+
+  /* Reading progress bar */
+  .progress-bar {
+    position: fixed; top: 0; left: 0; right: 0; height: 3px;
+    background: transparent; z-index: 200;
+  }
+  .progress-bar__fill {
+    height: 100%; width: 0%;
+    background: linear-gradient(90deg, var(--c-oro), var(--c-oro-deep));
+    transition: width 100ms linear;
+  }
+
+  /* Topbar (mini header, lighter than main site) */
+  .topbar {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(255,255,255,0.96);
+    backdrop-filter: saturate(180%) blur(12px);
+    -webkit-backdrop-filter: saturate(180%) blur(12px);
+    border-bottom: 1px solid var(--c-grigio-bordo);
+    height: var(--header-h);
+  }
+  .topbar__inner {
+    max-width: 1280px; margin: 0 auto; padding: 0 24px;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 100%; gap: 16px;
+  }
+  .topbar__logo { display: inline-flex; align-items: center; gap: 10px; }
+  .topbar__mark { width: 30px; height: 30px; background: var(--c-azzurro-deep); color: var(--c-oro); border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; font-family: var(--f-display); font-size: 13px; letter-spacing: -0.5px; }
+  .topbar__name { font-size: 14px; font-weight: 700; color: var(--c-azzurro-night); }
+  .topbar__home { font-size: 13px; font-weight: 500; color: var(--c-grafite-soft); }
+  .topbar__home:hover { color: var(--c-azzurro-deep); }
+
+  /* Cover (hero of the document) */
+  .cover {
+    position: relative;
+    padding: 80px 24px 56px;
+    background: linear-gradient(135deg, var(--c-azzurro-night) 0%, var(--c-azzurro-deep) 70%, var(--c-azzurro) 100%);
+    color: white;
+    overflow: hidden;
+  }
+  .cover::before {
+    content: ""; position: absolute; inset: 0;
+    background:
+      radial-gradient(circle at 80% 30%, rgba(242,194,0,0.12) 0%, transparent 50%),
+      radial-gradient(circle at 20% 70%, rgba(182,166,202,0.10) 0%, transparent 50%);
+    pointer-events: none;
+  }
+  .cover::after {
+    content: ""; position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none; opacity: 0.4;
+  }
+  .cover__inner { position: relative; z-index: 2; max-width: 880px; margin: 0 auto; }
+  .cover__eyebrow {
+    display: inline-block;
+    font-size: 12px; font-weight: 700;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--c-oro);
+    padding: 6px 14px;
+    border: 1px solid rgba(242,194,0,0.45);
+    border-radius: 999px;
+    margin-bottom: 28px;
+  }
+  .cover__title {
+    color: white;
+    font-family: var(--f-serif); font-style: italic; font-weight: 700;
+    font-size: clamp(48px, 9vw, 104px);
+    line-height: 0.95; letter-spacing: -0.02em;
+    margin: 0 0 18px;
+  }
+  .cover__sub {
+    color: rgba(255,255,255,0.88);
+    font-size: clamp(18px, 2vw, 22px);
+    line-height: 1.5; max-width: 60ch;
+    margin: 0 0 32px;
+  }
+  .cover__meta {
+    display: flex; flex-wrap: wrap; gap: 24px;
+    font-size: 12px; color: rgba(255,255,255,0.65);
+    letter-spacing: 0.06em; text-transform: uppercase; font-weight: 600;
+    padding-top: 24px;
+    border-top: 1px solid rgba(255,255,255,0.15);
+  }
+  .cover__meta span { display: inline-flex; align-items: center; gap: 6px; }
+  .cover__actions {
+    display: flex; flex-wrap: wrap; gap: 12px;
+    margin-top: 32px;
+  }
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    gap: 8px;
+    padding: 12px 22px;
+    border-radius: 999px;
+    font-family: var(--f-sans); font-weight: 600; font-size: 14px;
+    line-height: 1.2; min-height: 44px;
+    transition: all var(--motion-fast);
+    border: 2px solid transparent; cursor: pointer;
+    text-decoration: none;
+  }
+  .btn--primary { background: var(--c-oro); color: var(--c-azzurro-night); border-color: var(--c-oro); }
+  .btn--primary:hover { background: var(--c-oro-deep); border-color: var(--c-oro-deep); color: var(--c-azzurro-night); transform: translateY(-1px); box-shadow: var(--shadow-2); }
+  .btn--ghost { background: transparent; color: white; border-color: rgba(255,255,255,0.5); }
+  .btn--ghost:hover { background: rgba(255,255,255,0.12); border-color: white; color: white; }
+
+  /* Coalition credit strip — elegant single-line ledger */
+  .coalition {
+    background: white;
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--c-grigio-bordo);
+  }
+  .coalition__inner {
+    max-width: 1080px; margin: 0 auto;
+    display: flex; flex-wrap: wrap; align-items: center;
+    justify-content: center;
+    gap: 6px 12px;
+    text-align: center;
+  }
+  .coalition__label {
+    font-family: var(--f-sans);
+    font-size: 10.5px; font-weight: 700;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--c-grafite-muted);
+    padding-right: 4px;
+  }
+  .coalition__names {
+    display: inline-flex; flex-wrap: wrap;
+    align-items: center;
+    gap: 4px 10px;
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--c-azzurro-deep);
+    font-family: var(--f-sans);
+    letter-spacing: 0.01em;
+  }
+  .coalition__name { white-space: nowrap; }
+  .coalition__sep {
+    color: var(--c-grafite-muted);
+    font-weight: 400;
+    user-select: none;
+    opacity: 0.55;
+  }
+  @media (max-width: 600px) {
+    .coalition { padding: 14px 18px; }
+    .coalition__label { display: block; width: 100%; margin-bottom: 4px; }
+    .coalition__names { font-size: 11.5px; gap: 3px 8px; justify-content: center; }
+  }
+
+  /* Opening quote (from Fontana) */
+  .opener {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 72px 24px 56px;
+    text-align: center;
+  }
+  .opener__quote {
+    font-family: var(--f-serif);
+    font-style: italic; font-weight: 400;
+    font-size: clamp(22px, 2.6vw, 32px);
+    line-height: 1.4;
+    color: var(--c-azzurro-night);
+    margin: 0 0 20px;
+    position: relative;
+  }
+  .opener__quote::before {
+    content: "\201C";
+    position: absolute; top: -40px; left: 50%; transform: translateX(-50%);
+    font-family: var(--f-serif);
+    font-size: 80px; line-height: 1;
+    color: var(--c-oro);
+    font-style: normal;
+  }
+  .opener__attr {
+    font-size: 13px; font-weight: 600;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--c-grafite-muted);
+  }
+
+  /* Main document layout: content + sticky TOC */
+  .doc {
+    max-width: 1280px; margin: 0 auto;
+    padding: 0 24px 96px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+  @media (min-width: 1024px) {
+    .doc { grid-template-columns: 1fr 240px; gap: 80px; }
+  }
+
+  /* TOC (right sidebar on desktop) */
+  .toc {
+    background: white;
+    border-radius: var(--r-md);
+    padding: 20px;
+    box-shadow: var(--shadow-1);
+    order: -1;
+  }
+  @media (min-width: 1024px) {
+    .toc {
+      position: sticky; top: calc(var(--header-h) + 20px);
+      align-self: start;
+      order: 0;
+      max-height: calc(100vh - var(--header-h) - 40px);
+      overflow-y: auto;
+    }
+  }
+  .toc__title {
+    font-family: var(--f-sans);
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--c-grafite-muted);
+    margin: 0 0 14px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--c-grigio-bordo);
+  }
+  .toc__list { padding: 0; margin: 0; list-style: none; counter-reset: toc; }
+  .toc__list li {
+    counter-increment: toc;
+    margin-bottom: 8px;
+  }
+  .toc__list a {
+    display: flex; gap: 10px; align-items: baseline;
+    font-size: 13px;
+    color: var(--c-grafite-soft);
+    padding: 4px 0;
+    line-height: 1.35;
+    transition: color var(--motion-fast);
+  }
+  .toc__list a::before {
+    content: counter(toc, decimal-leading-zero);
+    font-family: var(--f-display);
+    font-size: 12px;
+    color: var(--c-oro);
+    flex-shrink: 0;
+    width: 22px;
+  }
+  .toc__list a:hover { color: var(--c-azzurro-deep); }
+  .toc__list a.is-active { color: var(--c-azzurro-deep); font-weight: 600; }
+
+  /* The 14 planks */
+  .planks { display: flex; flex-direction: column; gap: 64px; }
+  .plank {
+    background: white;
+    border-radius: var(--r-md);
+    padding: 48px;
+    box-shadow: var(--shadow-1);
+    scroll-margin-top: 80px;
+  }
+  @media (max-width: 600px) {
+    .plank { padding: 32px 24px; }
+  }
+  .plank__header {
+    display: flex; align-items: baseline; gap: 24px;
+    margin-bottom: 24px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--c-grigio-bordo);
+  }
+  .plank__num {
+    font-family: var(--f-display);
+    font-size: clamp(48px, 6vw, 84px);
+    color: var(--c-oro);
+    line-height: 0.8;
+    letter-spacing: -0.04em;
+    flex-shrink: 0;
+  }
+  .plank__title {
+    font-family: var(--f-serif);
+    font-size: clamp(24px, 3vw, 34px);
+    color: var(--c-azzurro-night);
+    margin: 0;
+    line-height: 1.1;
+    flex: 1;
+  }
+  .plank__body {
+    font-size: clamp(17px, 1.6vw, 19px);
+    line-height: 1.7;
+    color: var(--c-grafite);
+    margin: 0;
+  }
+  .plank__body::first-letter {
+    font-family: var(--f-serif);
+    font-size: 3.6em;
+    line-height: 0.85;
+    float: left;
+    margin: 0.05em 0.1em 0 -0.02em;
+    color: var(--c-azzurro-deep);
+    font-weight: 700;
+  }
+
+  /* Damiano's personal note on selected planks */
+  .plank__note {
+    margin-top: 28px;
+    padding: 24px 28px;
+    background: var(--c-grigio-cielo);
+    border-left: 4px solid var(--c-lilla);
+    border-radius: var(--r-md);
+    position: relative;
+  }
+  .plank__note-label {
+    display: inline-block;
+    font-family: var(--f-sans);
+    font-size: 10px; font-weight: 700;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--c-lilla);
+    margin-bottom: 8px;
+  }
+  .plank__note-text {
+    font-family: var(--f-serif);
+    font-style: italic;
+    font-size: 17px; line-height: 1.5;
+    color: var(--c-azzurro-night);
+    margin: 0 0 8px;
+  }
+  .plank__note-sig {
+    font-family: var(--f-sans);
+    font-size: 12px; font-weight: 700;
+    color: var(--c-azzurro);
+    letter-spacing: 0.04em;
+  }
+
+  /* Final CTA block */
+  .closing {
+    background: var(--c-azzurro-night);
+    color: white;
+    padding: 80px 24px;
+    text-align: center;
+    margin-top: 48px;
+  }
+  .closing__inner { max-width: 700px; margin: 0 auto; }
+  .closing__eyebrow {
+    display: inline-block;
+    font-size: 12px; font-weight: 700;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--c-oro);
+    margin-bottom: 16px;
+  }
+  .closing__title {
+    color: white;
+    font-family: var(--f-serif);
+    font-style: italic;
+    font-size: clamp(32px, 4vw, 48px);
+    line-height: 1.15;
+    margin: 0 0 16px;
+  }
+  .closing__text {
+    color: rgba(255,255,255,0.85);
+    font-size: 18px; line-height: 1.55;
+    margin: 0 0 32px;
+  }
+  .closing__cta { display: inline-flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+
+  /* Footer */
+  .doc-footer {
+    background: white;
+    padding: 32px 24px 48px;
+    text-align: center;
+    font-size: 12px;
+    color: var(--c-grafite-muted);
+    line-height: 1.6;
+    border-top: 1px solid var(--c-grigio-bordo);
+  }
+  .doc-footer a { color: var(--c-grafite-soft); text-decoration: underline; }
+  .doc-footer__legal { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--c-grigio-bordo); max-width: 700px; margin-left: auto; margin-right: auto; }
+
+  /* Print stylesheet — when the user prints (or Ctrl-P → save as PDF) */
+  @media print {
+    @page { size: A4; margin: 18mm 16mm; }
+    body { background: white; color: black; font-family: Georgia, "Times New Roman", serif; }
+    .progress-bar, .topbar, .toc, .coalition, .cover__actions, .closing__cta { display: none !important; }
+
+    .cover {
+      background: white !important; color: black !important;
+      padding: 0 0 32px !important;
+      border-bottom: 2px solid black;
+      page-break-after: avoid;
+    }
+    .cover::before, .cover::after { display: none; }
+    .cover__eyebrow { color: black !important; border-color: black; }
+    .cover__title { color: black !important; font-family: Georgia, serif; }
+    .cover__sub { color: #333 !important; }
+    .cover__meta { color: #555 !important; border-color: #ccc; }
+    .cover__meta span { color: inherit; }
+
+    .opener { padding: 24px 0; page-break-after: avoid; }
+    .opener__quote { color: black; }
+    .opener__quote::before { color: #444; }
+
+    .doc { grid-template-columns: 1fr; padding: 0; gap: 0; }
+    .planks { gap: 0; }
+    .plank {
+      box-shadow: none; border: none; padding: 16px 0;
+      page-break-inside: avoid;
+      page-break-before: always;
+      background: white !important;
+    }
+    .plank:first-child { page-break-before: auto; }
+    .plank__header { border-bottom: 1.5px solid black; padding-bottom: 12px; margin-bottom: 12px; }
+    .plank__num { color: #555 !important; font-family: Arial Black, sans-serif; font-size: 56px !important; }
+    .plank__title { color: black; font-family: Georgia, serif; font-size: 22px !important; }
+    .plank__body { color: black; font-size: 13pt; line-height: 1.5; }
+    .plank__body::first-letter { color: #555; }
+    .plank__note {
+      background: #f4f4f4 !important; border-left: 3px solid #555;
+      page-break-inside: avoid;
+    }
+    .plank__note-label, .plank__note-sig { color: #555; }
+    .plank__note-text { color: black; font-family: Georgia, serif; }
+
+    .closing {
+      background: white !important; color: black !important;
+      padding: 32px 0 !important; page-break-before: always;
+    }
+    .closing__title, .closing__text, .closing__eyebrow { color: black !important; }
+
+    .doc-footer { background: white; color: #555; page-break-before: auto; }
+    .doc-footer a { color: #444; }
+  }
+
+  /* prefers-reduced-motion */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+  }
+
+  /* ---------- Multi-language (clean DOM pattern) ---------- */
+  html[lang="it"] [lang="en"], html[lang="it"] [lang="fr"],
+  html[lang="en"] [lang="it"], html[lang="en"] [lang="fr"],
+  html[lang="fr"] [lang="it"], html[lang="fr"] [lang="en"] { display: none !important; }
+
+  /* Inline lang spans should be unset to inherit parent styling */
+  span[lang] { display: inline; }
+  div[lang], p[lang], h1[lang], h2[lang], h3[lang], blockquote[lang], ol[lang], ul[lang], li[lang] { display: block; }
+
+  /* Language switcher */
+  .lang-switcher {
+    display: inline-flex; gap: 2px;
+    padding: 3px;
+    background: var(--c-grigio-cielo);
+    border-radius: 999px;
+  }
+  .lang-btn {
+    padding: 4px 10px;
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--c-grafite-soft);
+    border-radius: 999px;
+    background: transparent; border: none;
+    cursor: pointer;
+    transition: all var(--motion-fast);
+    font-family: var(--f-sans);
+  }
+  .lang-btn[aria-pressed="true"] { background: var(--c-azzurro-deep); color: white; }
+  .lang-btn:hover:not([aria-pressed="true"]) { color: var(--c-azzurro-deep); background: rgba(0,63,135,0.05); }
+  .lang-btn:focus-visible { outline: 2px solid var(--c-oro); outline-offset: 2px; }
+
+  /* In dark topbar variants (cover area): keep light */
+  </style>
+</head>
+<body>
+
+  <!-- Reading progress bar -->
+  <div class="progress-bar" aria-hidden="true">
+    <div class="progress-bar__fill" id="progress"></div>
+  </div>
+
+  <!-- Topbar -->
+  <header class="topbar" role="banner">
+    <div class="topbar__inner">
+      <a class="topbar__logo" href="../" aria-label="Damiano Coccioli — home">
+        <span class="topbar__mark">DC</span>
+        <span class="topbar__name">Damiano Coccioli</span>
+      </a>
+      <div style="display: flex; align-items: center; gap: 16px;">
+        <div class="lang-switcher" role="group" aria-label="Lingua / Language">
+          <button class="lang-btn" data-lang="it" aria-pressed="true">IT</button>
+          <button class="lang-btn" data-lang="en" aria-pressed="false">EN</button>
+          <button class="lang-btn" data-lang="fr" aria-pressed="false">FR</button>
+        </div>
+        <a class="topbar__home" href="../">
+          <span lang="it">← Torna al sito</span>
+          <span lang="en">← Back to site</span>
+          <span lang="fr">← Retour au site</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Cover -->
+  <section class="cover" aria-labelledby="cover-title">
+    <div class="cover__inner">
+      <span class="cover__eyebrow">
+        <span lang="it">Il programma del centrodestra · Moncalieri 2026</span>
+        <span lang="en">Centre-right manifesto · Moncalieri 2026</span>
+        <span lang="fr">Le programme du centre-droit · Moncalieri 2026</span>
+      </span>
+      <h1 class="cover__title" id="cover-title">
+        <span lang="it">Moncalieri Cambia.</span>
+        <span lang="en">Moncalieri Changes.</span>
+        <span lang="fr">Moncalieri Change.</span>
+      </h1>
+      <p class="cover__sub">
+        <span lang="it">Quattordici priorità concrete della coalizione che sostiene Maurizio Fontana per Sindaco. Scritte da chi conosce la città e vuole rimetterla in moto.</span>
+        <span lang="en">Fourteen concrete priorities from the coalition supporting Maurizio Fontana for Mayor. Written by people who know the city and want to set it moving again.</span>
+        <span lang="fr">Quatorze priorités concrètes de la coalition qui soutient Maurizio Fontana à la mairie. Écrites par ceux qui connaissent la ville et veulent la remettre en marche.</span>
+      </p>
+      <div class="cover__actions">
+        <a class="btn btn--primary" href="../assets/pdf/Moncalieri_Cambia_2026.pdf" download>
+          <span aria-hidden="true">↓</span>
+          <span lang="it">Scarica il PDF</span>
+          <span lang="en">Download PDF</span>
+          <span lang="fr">Télécharger le PDF</span>
+        </a>
+        <a class="btn btn--ghost" id="share-wa" href="#" rel="noopener" target="_blank">
+          <span aria-hidden="true">↗</span>
+          <span lang="it">Condividi</span>
+          <span lang="en">Share</span>
+          <span lang="fr">Partager</span>
+        </a>
+      </div>
+      <p class="cover__meta">
+        <span>
+          <span lang="it">Documento ufficiale della coalizione</span>
+          <span lang="en">Official coalition document</span>
+          <span lang="fr">Document officiel de la coalition</span>
+        </span>
+        <span>
+          <span lang="it">14 priorità</span>
+          <span lang="en">14 priorities</span>
+          <span lang="fr">14 priorités</span>
+        </span>
+        <span>
+          <span lang="it">~7 min di lettura</span>
+          <span lang="en">~7 min read</span>
+          <span lang="fr">~7 min de lecture</span>
+        </span>
+        <span>
+          <span lang="it">Aggiornato 22 maggio 2026</span>
+          <span lang="en">Updated 22 May 2026</span>
+          <span lang="fr">Mis à jour le 22 mai 2026</span>
+        </span>
+      </p>
+    </div>
+  </section>
+
+  <!-- Coalition credit strip -->
+  <div class="coalition" aria-label="Coalizione di centrodestra">
+    <div class="coalition__inner">
+      <span class="coalition__label">
+        <span lang="it">La coalizione</span>
+        <span lang="en">The coalition</span>
+        <span lang="fr">La coalition</span>
+      </span>
+      <span class="coalition__names" translate="no">
+        <span class="coalition__name">Forza Italia</span>
+        <span class="coalition__sep" aria-hidden="true">·</span>
+        <span class="coalition__name">Fratelli d'Italia</span>
+        <span class="coalition__sep" aria-hidden="true">·</span>
+        <span class="coalition__name">Lega Salvini Premier</span>
+        <span class="coalition__sep" aria-hidden="true">·</span>
+        <span class="coalition__name">UDC</span>
+        <span class="coalition__sep" aria-hidden="true">·</span>
+        <span class="coalition__name">Noi Moderati</span>
+      </span>
+    </div>
+  </div>
+
+  <!-- Opener quote from Fontana -->
+  <section class="opener" aria-label="Apertura del programma">
+    <blockquote class="opener__quote">
+      <span lang="it">Dopo 32 anni serve un cambio di passo. L'esperienza di fare, la visione per cambiare. Il futuro inizia adesso.</span>
+      <span lang="en">After 32 years, we need a change of pace. The experience to act. The vision to change. The future begins now.</span>
+      <span lang="fr">Après 32 ans, il faut un changement de cap. L'expérience pour agir. La vision pour changer. L'avenir commence maintenant.</span>
+    </blockquote>
+    <p class="opener__attr">
+      <span lang="it">— Maurizio Fontana, candidato Sindaco di Moncalieri</span>
+      <span lang="en">— Maurizio Fontana, candidate for Mayor of Moncalieri</span>
+      <span lang="fr">— Maurizio Fontana, candidat à la mairie de Moncalieri</span>
+    </p>
+  </section>
+
+  <!-- Main document: planks + TOC -->
+  <div class="doc">
+
+    <main class="planks">
+
+      <article class="plank" id="centro-storico">
+        <header class="plank__header">
+          <div class="plank__num" aria-hidden="true">01</div>
+          <h2 class="plank__title"><span lang="it">Centro storico</span><span lang="en">Town centre</span><span lang="fr">Centre-ville</span></h2>
+        </header>
+        <p class="plank__body"><span lang="it">Riapriamo Piazza Vittorio e ridiamo vita al centro: più accesso, più eventi, più commercio. Torniamo a farlo vivere. Il cuore di Moncalieri non può restare un'area di passaggio con vetrine spente: chi ci vive ogni giorno merita una città che si guarda dentro, non che si svuota verso le periferie.</span><span lang="en">Let's reopen Piazza Vittorio and bring the centre back to life: more access, more events, more commerce. The heart of Moncalieri can't stay a thoroughfare with empty windows. The people who live here every day deserve a city that looks inward, not one that quietly empties towards the suburbs.</span><span lang="fr">Rouvrons la Piazza Vittorio et redonnons vie au centre : plus d'accès, plus d'événements, plus de commerce. Le cœur de Moncalieri ne peut pas rester un lieu de passage aux vitrines éteintes. Ceux qui y vivent méritent une ville qui se regarde de l'intérieur, pas une ville qui se vide vers la périphérie.</span></p>
+        <aside class="plank__note">
+          <p class="plank__note-label"><span lang="it">La nota di Damiano</span><span lang="en">A note from Damiano</span><span lang="fr">Note de Damiano</span></p>
+          <p class="plank__note-text"><span lang="it">«Piazza Vittorio dovrebbe essere un appuntamento, non una piazza da attraversare in fretta. Se il sabato pomeriggio non c'è motivo per andarci, abbiamo già perso il centro.»</span><span lang="en">«Piazza Vittorio should be a date, not a square to cross in a hurry. If there's no reason to go there on a Saturday afternoon, we've already lost the centre.»</span><span lang="fr">«La Piazza Vittorio devrait être un rendez-vous, pas une place qu'on traverse en vitesse. Si on n'a aucune raison d'y aller un samedi après-midi, on a déjà perdu le centre.»</span></p>
+          <p class="plank__note-sig">— Damiano Coccioli</p>
+        </aside>
+      </article>
+
+      <article class="plank" id="sicurezza">
+        <header class="plank__header">
+          <div class="plank__num" aria-hidden="true">02</div>
+          <h2 class="plank__title"><span lang="it">Sicurezza</span><span lang="en">Safety</span><span lang="fr">Sécurité</span></h2>
+        </header>
+        <p class="plank__body"><span lang="it">Più controlli, più luce, più telecamere: sicurezza vera, presenza costante e tolleranza zero per chi non rispetta le regole. La sicurezza non è una promessa elettorale, è un servizio di base — e in alcuni quartieri di Moncalieri il servizio di base non funziona da troppo tempo.</span><span lang="en">More controls, more lighting, more cameras: real safety, constant presence and zero tolerance for those who break the rules. Safety isn't a campaign promise, it's a basic service — and in some Moncalieri neighbourhoods, the basic service hasn't been working for too long.</span><span lang="fr">Plus de contrôles, plus de lumière, plus de caméras : une sécurité réelle, une présence constante et la tolérance zéro pour ceux qui ne respectent pas les règles. La sécurité n'est pas une promesse électorale, c'est un service de base — et dans certains quartiers de Moncalieri, ce service de base ne fonctionne plus depuis trop longtemps.</span></p>
+      </article>
+
+      <article class="plank" id="urbanistica">
+        <header class="plank__header">
+          <div class="plank__num" aria-hidden="true">03</div>
+          <h2 class="plank__title"><span lang="it">Urbanistica</span><span lang="en">Urban planning</span><span lang="fr">Urbanisme</span></h2>
+        </header>
+        <p class="plank__body"><span lang="it">Un nuovo piano regolatore per il futuro: zero consumo di suolo, più rigenerazione e meno burocrazia. Costruire bene dove già c'è qualcosa, restituire spazi inutilizzati alla città. Il vecchio paradigma del consumo di suolo è finito da anni — Moncalieri lo deve riconoscere nei fatti.</span><span lang="en">A new urban plan for the future: zero land consumption, more regeneration, less red tape. Building well where things already stand, giving unused spaces back to the city. The old land-consumption paradigm has been over for years — Moncalieri needs to recognise that in practice, not just in words.</span><span lang="fr">Un nouveau plan d'urbanisme pour l'avenir : zéro consommation de sol, plus de régénération et moins de bureaucratie. Construire bien là où il y a déjà quelque chose, redonner à la ville les espaces inutilisés. L'ancien paradigme de la consommation des sols est terminé depuis des années — Moncalieri doit le reconnaître dans les faits.</span></p>
+      </article>
+
+      <article class="plank" id="ambiente">
+        <header class="plank__header">
+          <div class="plank__num" aria-hidden="true">04</div>
+          <h2 class="plank__title"><span lang="it">Ambiente</span><span lang="en">Environment</span><span lang="fr">Environnement</span></h2>
+        </header>
+        <p class="plank__body"><span lang="it">Stop al degrado e all'abbandono: più cura del territorio, manutenzione continua e tolleranza zero contro l'inciviltà. Il decoro urbano non è un problema estetico: è il primo segnale che il Comune c'è e funziona. Quando un'area degrada, non degrada solo quell'area — degrada la fiducia di chi ci vive.</span><span lang="en">Stop the decay and the abandonment: more care for the territory, continuous maintenance, zero tolerance for incivility. Urban decorum isn't a cosmetic issue: it's the first sign that the city government is there and works. When an area decays, it isn't only that area that decays — it's the trust of the people who live there.</span><span lang="fr">Stop à la dégradation et à l'abandon : plus de soin du territoire, un entretien continu et la tolérance zéro contre l'incivilité. Le décor urbain n'est pas une question esthétique : c'est le premier signe que la commune est là et qu'elle fonctionne. Quand une zone se dégrade, ce n'est pas seulement la zone qui se dégrade — c'est la confiance de ceux qui y vivent.</span></p>
+      </article>
+
+      <article class="plank" id="accessibilita">
+        <header class="plank__header">
+          <div class="plank__num" aria-hidden="true">05</div>
+          <h2 class="plank__title"><span lang="it">Accessibilità</span><span lang="en">Accessibility</span><span lang="fr">Accessibilité</span></h2>
+        </header>
+        <p class="plank__body"><span lang="it">Meno barriere, più inclusione: una città accessibile a tutti e servizi concreti per chi vive con disabilità e per le famiglie. Marciapiedi senza buchi, edifici pubblici raggiungibili, comunicazione chiara per chi ha difficoltà — non è un favore, è un diritto.</span><span lang="en">Fewer barriers, more inclusion: a city accessible to all, with concrete services for people living with disabilities and for families. Smooth pavements, reachable public buildings, clear communication for those who need it — that's not a favour, it's a right.</span><span lang="fr">Moins de barrières, plus d'inclusion : une ville accessible à tous et des services concrets pour les personnes en situation de handicap et pour les familles. Des trottoirs sans trous, des bâtiments publics accessibles, une communication claire pour ceux qui en ont besoin — ce n'est pas une faveur, c'est un droit.</span></p>
+        <aside class="plank__note">
+          <p class="plank__note-label"><span lang="it">La nota di Damiano</span><span lang="en">A note from Damiano</span><span lang="fr">Note de Damiano</span></p>
+          <p class="plank__note-text"><span lang="it">«Una città accessibile non si misura nei convegni, si misura camminandola con un passeggino o una sedia a rotelle. Moncalieri ha ancora molte strade da rifare in questo senso.»</span><span lang="en">«An accessible city isn't measured in conferences. It's measured walking it with a pram or a wheelchair. Moncalieri still has a lot of streets to redo in that sense.»</span><span lang="fr">«Une ville accessible ne se mesure pas en colloques. Elle se mesure en la parcourant avec une poussette ou un fauteuil roulant. Moncalieri a encore beaucoup de rues à refaire dans ce sens.»</span></p>
+          <p class="plank__note-sig">— Damiano Coccioli</p>
+        </aside>
+      </article>
+
+      <article class="plank" id="borgate">
+        <header class="plank__header">
+          <div class="plank__num" aria-hidden="true">06</div>
+          <h2 class="plank__title"><span lang="it">Borgate e comunità</span><span lang="en">Districts & community</span><span lang="fr">Quartiers et communauté</span></h2>
+        </header>
+        <p class="plank__body"><span lang="it">Più servizi, più ascolto, più presenza nei quartieri: una comunità unita, senza periferie dimenticate. Borgo San Pietro, Borgo Mercato, Santa Maria, Revigliasco, Tetti Piatti: ogni borgata è Moncalieri quanto il centro. Lo è dal punto di vista anagrafico — deve esserlo anche da quello dei servizi.</span><span lang="en">More services, more listening, more presence in the neighbourhoods: a united community, with no forgotten suburbs. Borgo San Pietro, Borgo Mercato, Santa Maria, Revigliasco, Tetti Piatti: every district is Moncalieri as much as the centre is. They are on paper — they need to be in terms of services too.</span><span lang="fr">Plus de services, plus d'écoute, plus de présence dans les quartiers : une communauté unie, sans périphéries oubliées. Borgo San Pietro, Borgo Mercato, Santa Maria, Revigliasco, Tetti Piatti : chaque quartier est Moncalieri autant que le centre. Sur le plan administratif il l'est — il doit l'être aussi en termes de services.</span></p>
+        <aside class="plank__note">
+          <p class="plank__note-label"><span lang="it">La nota di Damiano</span><span lang="en">A note from Damiano</span><span lang="fr">Note de Damiano</span></p>
+          <p class="plank__note-text"><span lang="it">«I borghi non sono periferia di passaggio. Sono dove si vive davvero Moncalieri. Lo so perché ci sono cresciuto.»</span><span lang="en">«The districts aren't a passing periphery. They're where Moncalieri is really lived. I know because I grew up there.»</span><span lang="fr">«Les quartiers ne sont pas une périphérie de passage. C'est là qu'on vit vraiment Moncalieri. Je le sais parce que j'y ai grandi.»</span></p>
+          <p class="plank__note-sig">— Damiano Coccioli</p>
+        </aside>
+      </article>
+
+      <article class="plank" id="attivita-produttive">
+        <header class="plank__header">
+          <div class="plank__num" aria-hidden="true">07</div>
+          <h2 class="plank__title"><span lang="it">Attività produttive</span><span lang="en">Local business</span><span lang="fr">Activités productives</span></h2>
+        </header>
+        <p class="plank__body"><span lang="it">Meno tasse e meno burocrazia: sostegno alle imprese, incentivi e rilancio del commercio locale. Le imprese di Moncalieri non chiedono favori, chiedono che il Comune non sia un ostacolo. Sportello unico più veloce, procedure chiare, premi a chi assume sul territorio: si può fare, basta volerlo.</span><span lang="en">Lower taxes, less bureaucracy: support for businesses, incentives, and a revival of local commerce. The businesses of Moncalieri don't ask for favours, they ask that the City Hall doesn't get in the way. A faster one-stop shop, clear procedures, rewards for those who hire locally: it can be done — it just takes the will.</span><span lang="fr">Moins d'impôts et moins de bureaucratie : soutien aux entreprises, incitations et relance du commerce local. Les entreprises de Moncalieri ne demandent pas de faveurs, elles demandent que la mairie ne soit pas un obstacle. Un guichet unique plus rapide, des procédures claires, des récompenses pour ceux qui embauchent localement : c'est possible — il suffit de le vouloir.</span></p>
+      </article>
+
+      <article class="plank" id="trasporti">
+        <header class="plank__header">
+          <div class="plank__num" aria-hidden="true">08</div>
+          <h2 class="plank__title"><span lang="it">Trasporti</span><span lang="en">Transport</span><span lang="fr">Transports</span></h2>
+        </header>
+        <p class="plank__body"><span lang="it">Mobilità intelligente: meno traffico, collegamenti migliori e trasporti pubblici più efficienti. Chi si muove tra borgo e centro ogni giorno conosce il problema. Servono linee più frequenti, mezzi più affidabili, una mobilità pensata per chi lavora — non solo per chi visita.</span><span lang="en">Smart mobility: less traffic, better connections, more efficient public transport. Those who move between district and centre every day know the problem. We need more frequent lines, more reliable vehicles, a mobility designed for people who work — not just for those who visit.</span><span lang="fr">Une mobilité intelligente : moins de trafic, de meilleures connexions et des transports publics plus efficaces. Ceux qui font le trajet quartier-centre tous les jours connaissent le problème. Il faut des lignes plus fréquentes, des véhicules plus fiables, une mobilité pensée pour ceux qui travaillent — pas seulement pour ceux qui visitent.</span></p>
+      </article>
+
+      <article class="plank" id="agricoltura">
+        <header class="plank__header">
+          <div class="plank__num" aria-hidden="true">09</div>
+          <h2 class="plank__title"><span lang="it">Agricoltura</span><span lang="en">Agriculture</span><span lang="fr">Agriculture</span></h2>
+        </header>
+        <p class="plank__body"><span lang="it">Valorizziamo le nostre radici: sostegno alle aziende agricole e sviluppo della filiera locale a km zero. Le colline e le campagne attorno a Moncalieri sono una ricchezza che oggi si misura ancora troppo poco nel bilancio pubblico. Cambiamo passo: il prodotto locale è anche identità.</span><span lang="en">Let's value our roots: support for farms and development of the zero-km local supply chain. The hills and countryside around Moncalieri are a wealth still poorly accounted for in the public budget. Let's change pace: local produce is also identity.</span><span lang="fr">Valorisons nos racines : soutien aux exploitations agricoles et développement de la filière locale à km zéro. Les collines et les campagnes autour de Moncalieri sont une richesse encore trop peu prise en compte dans le budget public. Changeons de cap : le produit local, c'est aussi une identité.</span></p>
+      </article>
+
+      <article class="plank" id="cultura">
+        <header class="plank__header">
+          <div class="plank__num" aria-hidden="true">10</div>
+          <h2 class="plank__title"><span lang="it">Cultura</span><span lang="en">Culture</span><span lang="fr">Culture</span></h2>
+        </header>
+        <p class="plank__body"><span lang="it">Cultura per tutti: eventi, teatro e iniziative diffuse per rafforzare identità e comunità. La cultura non può essere un'esclusiva del centro storico: deve raggiungere i quartieri, le scuole, i giovani. E il Castello Reale dev'essere il cuore vivo della città, non solo un fondale per le foto.</span><span lang="en">Culture for everyone: events, theatre and initiatives spread across the city to strengthen identity and community. Culture can't be the historic centre's monopoly: it has to reach the neighbourhoods, the schools, the youth. And the Royal Castle has to be the living heart of the city, not just a backdrop for photos.</span><span lang="fr">Une culture pour tous : événements, théâtre et initiatives diffusées dans toute la ville pour renforcer l'identité et la communauté. La culture ne peut pas être l'exclusivité du centre historique : elle doit atteindre les quartiers, les écoles, les jeunes. Et le Château Royal doit être le cœur vivant de la ville, pas seulement une toile de fond pour les photos.</span></p>
+      </article>
+
+      <article class="plank" id="scuole">
+        <header class="plank__header">
+          <div class="plank__num" aria-hidden="true">11</div>
+          <h2 class="plank__title"><span lang="it">Scuole</span><span lang="en">Schools</span><span lang="fr">Écoles</span></h2>
+        </header>
+        <p class="plank__body"><span lang="it">Scuole sicure e moderne: manutenzione costante e strutture efficienti per studenti e famiglie. Tetti, infissi, palestre, mense: una scuola in cui tutto funziona è il modo più diretto in cui un Comune dice ai propri cittadini che la loro vita conta.</span><span lang="en">Safe, modern schools: constant maintenance and efficient facilities for students and families. Roofs, windows, gyms, canteens: a school where everything works is the most direct way a city government tells its citizens that their life matters.</span><span lang="fr">Des écoles sûres et modernes : entretien constant et installations efficaces pour les élèves et les familles. Les toits, les fenêtres, les gymnases, les cantines : une école où tout fonctionne, c'est la manière la plus directe pour une commune de dire à ses citoyens que leur vie compte.</span></p>
+        <aside class="plank__note">
+          <p class="plank__note-label"><span lang="it">La nota di Damiano</span><span lang="en">A note from Damiano</span><span lang="fr">Note de Damiano</span></p>
+          <p class="plank__note-text"><span lang="it">«Tempo pieno significa lavoro per i genitori e crescita per i figli. È una battaglia che non possiamo permetterci di perdere.»</span><span lang="en">«Full school days mean work for parents and growth for kids. That's a battle we can't afford to lose.»</span><span lang="fr">«La journée scolaire complète, c'est du travail pour les parents et de la croissance pour les enfants. C'est un combat qu'on ne peut pas se permettre de perdre.»</span></p>
+          <p class="plank__note-sig">— Damiano Coccioli</p>
+        </aside>
+      </article>
+
+      <article class="plank" id="giovani">
+        <header class="plank__header">
+          <div class="plank__num" aria-hidden="true">12</div>
+          <h2 class="plank__title"><span lang="it">Giovani, sport e tempo libero</span><span lang="en">Youth, sport, leisure</span><span lang="fr">Jeunesse, sport, loisirs</span></h2>
+        </header>
+        <p class="plank__body"><span lang="it">Più spazi e opportunità: sport, aggregazione e partecipazione per coinvolgere davvero i giovani. Una città che chiede ai suoi giovani di restare deve prima offrirgli qualcosa per cui valga la pena restare. Spazi, sport, occasioni di incontro: piccole cose, fatte bene.</span><span lang="en">More spaces and more opportunities: sport, gathering and participation to actually engage young people. A city that asks its young to stay first has to offer them something worth staying for. Spaces, sport, places to meet: small things, done well.</span><span lang="fr">Plus d'espaces et plus d'opportunités : le sport, les lieux de rassemblement et la participation pour impliquer vraiment les jeunes. Une ville qui demande à ses jeunes de rester doit d'abord leur offrir quelque chose qui en vaille la peine. Des espaces, du sport, des occasions de se rencontrer : de petites choses, bien faites.</span></p>
+        <aside class="plank__note">
+          <p class="plank__note-label"><span lang="it">La nota di Damiano</span><span lang="en">A note from Damiano</span><span lang="fr">Note de Damiano</span></p>
+          <p class="plank__note-text"><span lang="it">«Ho 28 anni e non sono andato via. Non vorrei che la mia generazione fosse l'ultima a poter dire la stessa cosa.»</span><span lang="en">«I'm 28 and I didn't leave. I wouldn't want my generation to be the last one able to say the same.»</span><span lang="fr">«J'ai 28 ans et je ne suis pas parti. Je ne voudrais pas que ma génération soit la dernière à pouvoir dire la même chose.»</span></p>
+          <p class="plank__note-sig">— Damiano Coccioli</p>
+        </aside>
+      </article>
+
+      <article class="plank" id="pari-opportunita">
+        <header class="plank__header">
+          <div class="plank__num" aria-hidden="true">13</div>
+          <h2 class="plank__title"><span lang="it">Pari opportunità</span><span lang="en">Equal opportunities</span><span lang="fr">Égalité des chances</span></h2>
+        </header>
+        <p class="plank__body"><span lang="it">Rispetto e sicurezza: sostegno concreto alle donne, prevenzione e servizi per una vera parità. Pari opportunità non è uno slogan da campagna: è un metro su cui si misura un'amministrazione anno dopo anno. Servono servizi, formazione, ascolto — non solo dichiarazioni.</span><span lang="en">Respect and safety: concrete support for women, prevention and services for genuine equality. Equal opportunities aren't a campaign slogan: they're a yardstick that measures an administration year after year. It takes services, training, listening — not just statements.</span><span lang="fr">Respect et sécurité : un soutien concret aux femmes, la prévention et des services pour une véritable parité. L'égalité des chances n'est pas un slogan de campagne : c'est un critère qui mesure une administration année après année. Il faut des services, de la formation, de l'écoute — pas seulement des déclarations.</span></p>
+      </article>
+
+      <article class="plank" id="animali">
+        <header class="plank__header">
+          <div class="plank__num" aria-hidden="true">14</div>
+          <h2 class="plank__title"><span lang="it">Animali e Comune pet friendly</span><span lang="en">Animals & a pet-friendly city</span><span lang="fr">Animaux et ville pet-friendly</span></h2>
+        </header>
+        <p class="plank__body"><span lang="it">Più servizi e spazi per gli animali: aree dedicate, decoro e una città moderna, accogliente per tutti. Una città che si prende cura dei suoi animali è una città che ha lo sguardo lungo: aree di sgambamento, igiene urbana, regole chiare e rispetto reciproco.</span><span lang="en">More services and spaces for animals: dedicated areas, urban decorum and a modern city, welcoming to everyone. A city that takes care of its animals is a city that looks ahead: dog-exercise areas, urban hygiene, clear rules and mutual respect.</span><span lang="fr">Plus de services et d'espaces pour les animaux : des zones dédiées, du décor urbain et une ville moderne, accueillante pour tous. Une ville qui prend soin de ses animaux est une ville qui voit loin : zones de détente canine, hygiène urbaine, règles claires et respect mutuel.</span></p>
+        <aside class="plank__note">
+          <p class="plank__note-label"><span lang="it">La nota di Damiano</span><span lang="en">A note from Damiano</span><span lang="fr">Note de Damiano</span></p>
+          <p class="plank__note-text"><span lang="it">«I cani al parco, i gatti nei cortili: fanno parte della città quanto noi. Una città civile lo riconosce.»</span><span lang="en">«Dogs in parks, cats in courtyards: they're part of the city as much as we are. A civilised city recognises that.»</span><span lang="fr">«Les chiens dans les parcs, les chats dans les cours : ils font partie de la ville autant que nous. Une ville civilisée le reconnaît.»</span></p>
+          <p class="plank__note-sig">— Damiano Coccioli</p>
+        </aside>
+      </article>
+
+    </main>
+
+    <!-- TOC -->
+    <aside class="toc" aria-label="Indice dei contenuti">
+      <p class="toc__title"><span lang="it">Indice</span><span lang="en">Contents</span><span lang="fr">Sommaire</span></p>
+      <ol class="toc__list">
+        <li><a href="#centro-storico"><span lang="it">Centro storico</span><span lang="en">Town centre</span><span lang="fr">Centre-ville</span></a></li>
+        <li><a href="#sicurezza"><span lang="it">Sicurezza</span><span lang="en">Safety</span><span lang="fr">Sécurité</span></a></li>
+        <li><a href="#urbanistica"><span lang="it">Urbanistica</span><span lang="en">Urban planning</span><span lang="fr">Urbanisme</span></a></li>
+        <li><a href="#ambiente"><span lang="it">Ambiente</span><span lang="en">Environment</span><span lang="fr">Environnement</span></a></li>
+        <li><a href="#accessibilita"><span lang="it">Accessibilità</span><span lang="en">Accessibility</span><span lang="fr">Accessibilité</span></a></li>
+        <li><a href="#borgate"><span lang="it">Borgate e comunità</span><span lang="en">Districts & community</span><span lang="fr">Quartiers et communauté</span></a></li>
+        <li><a href="#attivita-produttive"><span lang="it">Attività produttive</span><span lang="en">Local business</span><span lang="fr">Activités productives</span></a></li>
+        <li><a href="#trasporti"><span lang="it">Trasporti</span><span lang="en">Transport</span><span lang="fr">Transports</span></a></li>
+        <li><a href="#agricoltura"><span lang="it">Agricoltura</span><span lang="en">Agriculture</span><span lang="fr">Agriculture</span></a></li>
+        <li><a href="#cultura"><span lang="it">Cultura</span><span lang="en">Culture</span><span lang="fr">Culture</span></a></li>
+        <li><a href="#scuole"><span lang="it">Scuole</span><span lang="en">Schools</span><span lang="fr">Écoles</span></a></li>
+        <li><a href="#giovani"><span lang="it">Giovani, sport, tempo libero</span><span lang="en">Youth, sport, leisure</span><span lang="fr">Jeunesse, sport, loisirs</span></a></li>
+        <li><a href="#pari-opportunita"><span lang="it">Pari opportunità</span><span lang="en">Equal opportunities</span><span lang="fr">Égalité des chances</span></a></li>
+        <li><a href="#animali"><span lang="it">Animali e pet friendly</span><span lang="en">Animals & pet-friendly</span><span lang="fr">Animaux et pet-friendly</span></a></li>
+      </ol>
+    </aside>
+
+  </div>
+
+  <!-- Closing CTA -->
+  <section class="closing">
+    <div class="closing__inner">
+      <span class="closing__eyebrow">
+        <span lang="it">Il 24 e 25 maggio</span>
+        <span lang="en">On 24 and 25 May</span>
+        <span lang="fr">Les 24 et 25 mai</span>
+      </span>
+      <h2 class="closing__title">
+        <span lang="it">Moncalieri sceglie il proprio cambio di passo.</span>
+        <span lang="en">Moncalieri chooses its own change of pace.</span>
+        <span lang="fr">Moncalieri choisit son propre changement de cap.</span>
+      </h2>
+      <p class="closing__text">
+        <span lang="it">Vota Forza Italia. Scrivi <strong style="color: var(--c-oro)">COCCIOLI</strong> nella prima preferenza, <strong style="color: var(--c-oro)">CURATOLA</strong> nella seconda. È così che si fa contare la propria voce.</span>
+        <span lang="en">Vote Forza Italia. Write <strong style="color: var(--c-oro)">COCCIOLI</strong> as your first preference, <strong style="color: var(--c-oro)">CURATOLA</strong> as your second. That's how your voice counts.</span>
+        <span lang="fr">Votez Forza Italia. Écrivez <strong style="color: var(--c-oro)">COCCIOLI</strong> en première préférence, <strong style="color: var(--c-oro)">CURATOLA</strong> en seconde. C'est ainsi que votre voix compte.</span>
+      </p>
+      <div class="closing__cta">
+        <a href="../come-votare/" class="btn btn--primary"><span lang="it">Come si vota →</span><span lang="en">How to vote →</span><span lang="fr">Comment voter →</span></a>
+        <a href="../programma-coccioli/" class="btn btn--ghost"><span lang="it">Le priorità di Damiano</span><span lang="en">Damiano's priorities</span><span lang="fr">Les priorités de Damiano</span></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Doc footer -->
+  <footer class="doc-footer">
+    <p>© 2026 <span lang="it">Coalizione di centrodestra Moncalieri · <a href="../">Sito ufficiale Damiano Coccioli</a> · <a href="../privacy/">Privacy</a></span><span lang="en">Centre-right coalition Moncalieri · <a href="../">Official site Damiano Coccioli</a> · <a href="../privacy/">Privacy</a></span><span lang="fr">Coalition de centre-droit Moncalieri · <a href="../">Site officiel Damiano Coccioli</a> · <a href="../privacy/">Confidentialité</a></span></p>
+    <p class="doc-footer__legal"><span lang="it">Committente responsabile / Mandatario elettorale: <strong>Stefano Delpero</strong> — Coalizione di centrodestra Moncalieri 2026. Programma elettorale a cura del comitato della coalizione. Documento informativo. La grafica del manifesto cartaceo originale è scaricabile come <a href="../assets/img/programma_centrodestra.jpg">immagine poster</a>.</span><span lang="en">Responsible commissioner / Electoral agent: <strong>Stefano Delpero</strong> — Centre-right coalition Moncalieri 2026. Electoral programme curated by the coalition committee. Informational document. The original printed poster graphic is downloadable as a <a href="../assets/img/programma_centrodestra.jpg">poster image</a>.</span><span lang="fr">Responsable / Mandataire électoral : <strong>Stefano Delpero</strong> — Coalition de centre-droit Moncalieri 2026. Programme électoral du comité de la coalition. Document informatif. Le graphique de l'affiche imprimée d'origine est téléchargeable comme <a href="../assets/img/programma_centrodestra.jpg">image affiche</a>.</span></p>
+  </footer>
+
+  <script>
+  (function() {
+    'use strict';
+
+    // Reading progress bar
+    const fill = document.getElementById('progress');
+    function tick() {
+      const doc = document.documentElement;
+      const scrolled = (doc.scrollTop || document.body.scrollTop);
+      const max = (doc.scrollHeight - doc.clientHeight);
+      const pct = max > 0 ? (scrolled / max) * 100 : 0;
+      if (fill) fill.style.width = pct + '%';
+    }
+    document.addEventListener('scroll', tick, { passive: true });
+    tick();
+
+    // TOC active section tracking (IntersectionObserver)
+    if ('IntersectionObserver' in window) {
+      const links = Array.from(document.querySelectorAll('.toc__list a'));
+      const sections = Array.from(document.querySelectorAll('.plank'));
+      const map = new Map();
+      sections.forEach(s => {
+        const link = links.find(a => a.getAttribute('href') === '#' + s.id);
+        if (link) map.set(s, link);
+      });
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          const link = map.get(entry.target);
+          if (!link) return;
+          if (entry.isIntersecting) {
+            links.forEach(l => l.classList.remove('is-active'));
+            link.classList.add('is-active');
+          }
+        });
+      }, { rootMargin: '-30% 0px -60% 0px', threshold: 0 });
+      sections.forEach(s => io.observe(s));
+    }
+
+// Language switcher
+    function setLang(lang) {
+      if (!['it','en','fr'].includes(lang)) lang = 'it';
+      document.documentElement.lang = lang;
+      document.querySelectorAll('.lang-btn').forEach(b => {
+        b.setAttribute('aria-pressed', String(b.dataset.lang === lang));
+      });
+      try { localStorage.setItem('dc-lang', lang); } catch(e) {}
+      // update share-wa link with new language
+      updateShare();
+    }
+    function updateShare() {
+      const sw = document.getElementById('share-wa');
+      if (!sw) return;
+      const lang = document.documentElement.lang || 'it';
+      const u = encodeURIComponent(location.href);
+      const texts = {
+        it: '«Moncalieri Cambia!» — il programma completo del centrodestra per le elezioni del 24-25 maggio. 14 priorità concrete:',
+        en: 'Moncalieri Changes! — The centre-right manifesto for the 24-25 May elections. 14 priorities:',
+        fr: 'Moncalieri Change ! — Le programme du centre-droit pour les élections des 24-25 mai. 14 priorités :'
+      };
+      const t = encodeURIComponent(texts[lang] || texts.it);
+      sw.href = 'https://api.whatsapp.com/send?text=' + t + '%20' + u;
+    }
+    // Initialize language from URL or localStorage
+    (function initLang() {
+      let lang = 'it';
+      try { lang = localStorage.getItem('dc-lang') || 'it'; } catch(e) {}
+      const param = new URLSearchParams(location.search).get('lang');
+      if (param && ['it','en','fr'].includes(param)) lang = param;
+      setLang(lang);
+    })();
+    // Wire switcher buttons
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.addEventListener('click', () => setLang(btn.dataset.lang));
+    });
+
+    // Smooth scroll with offset (account for sticky topbar)
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', (e) => {
+        const id = a.getAttribute('href');
+        if (id.length <= 1) return;
+        const target = document.querySelector(id);
+        if (!target) return;
+        e.preventDefault();
+        const top = target.getBoundingClientRect().top + window.pageYOffset - 70;
+        window.scrollTo({ top, behavior: 'smooth' });
+        history.replaceState(null, '', id);
+      });
+    });
+  })();
+  </script>
+
+</body>
+</html>

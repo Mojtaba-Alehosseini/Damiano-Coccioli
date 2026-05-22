@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <title>Moncalieri Cambia! — Programma centrodestra 2026</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,700;0,900;1,700;1,900&family=Inter:wght@500;600;700;800&family=Archivo+Black&display=swap" />
+  <style>
+  /* =========================================================================
+     POSTER PDF — Moncalieri Cambia (single A4 page)
+     A4 = 210mm × 297mm
+     Magazine-density layout, website-aligned design tokens.
+     ========================================================================= */
+  :root {
+    --c-azzurro: #0096D6;
+    --c-azzurro-deep: #003F87;
+    --c-azzurro-night: #001E45;
+    --c-oro: #F2C200;
+    --c-oro-deep: #C69900;
+    --c-bianco: #FFFFFF;
+    --c-lilla: #B6A6CA;
+    --f-serif: "Fraunces", Georgia, serif;
+    --f-sans: "Inter", system-ui, sans-serif;
+    --f-display: "Archivo Black", sans-serif;
+  }
+  @page { size: A4 portrait; margin: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 210mm; height: 297mm; overflow: hidden; }
+  body {
+    font-family: var(--f-sans);
+    color: white;
+    background: linear-gradient(135deg, var(--c-azzurro-night) 0%, var(--c-azzurro-deep) 55%, var(--c-azzurro) 100%);
+    position: relative;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  /* Subtle grid pattern overlay */
+  body::before {
+    content: "";
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+    background-size: 14mm 14mm;
+    opacity: 0.5; z-index: 0;
+  }
+  body::after {
+    content: "";
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(circle at 85% 15%, rgba(242,194,0,0.14) 0%, transparent 35%),
+      radial-gradient(circle at 15% 85%, rgba(182,166,202,0.10) 0%, transparent 35%);
+    z-index: 0; pointer-events: none;
+  }
+  .page {
+    position: relative; z-index: 1;
+    padding: 10mm 12mm;
+    width: 210mm;
+  }
+  .page > section, .page > div { margin-bottom: 3mm; }
+
+  /* Top coalition strip */
+  .coalition {
+    display: flex; align-items: center; justify-content: center;
+    gap: 5mm; flex-wrap: wrap;
+    padding: 3mm 4mm;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 4mm;
+  }
+  .coalition__label {
+    font-size: 7pt; font-weight: 700;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--c-oro); margin-right: 4mm;
+  }
+  .coalition__name {
+    font-size: 8pt; font-weight: 700;
+    color: white;
+    padding: 1.2mm 3mm;
+    background: rgba(255,255,255,0.08);
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,0.2);
+  }
+
+  /* Hero */
+  .hero {
+    text-align: center;
+    padding: 2mm 0 0;
+  }
+  .hero__eyebrow {
+    display: inline-block;
+    font-size: 7.5pt; font-weight: 700;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--c-oro);
+    padding: 1.2mm 4mm;
+    border: 1px solid rgba(242,194,0,0.45);
+    border-radius: 999px;
+    margin-bottom: 4mm;
+  }
+  .hero__title {
+    font-family: var(--f-serif);
+    font-style: italic; font-weight: 900;
+    font-size: 60pt; line-height: 0.93;
+    letter-spacing: -0.025em;
+    color: white;
+    margin-bottom: 3mm;
+  }
+  .hero__sub {
+    font-family: var(--f-sans);
+    font-size: 10pt; line-height: 1.4;
+    color: rgba(255,255,255,0.86);
+    max-width: 145mm; margin: 0 auto 5mm;
+  }
+  .hero__quote {
+    font-family: var(--f-serif); font-style: italic;
+    font-size: 11.5pt; line-height: 1.35;
+    color: var(--c-oro);
+    max-width: 150mm; margin: 0 auto 1mm;
+  }
+  .hero__quote-attr {
+    font-size: 7.5pt;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    font-weight: 600;
+    color: rgba(255,255,255,0.6);
+  }
+
+  /* Grid of priorities */
+  .priorities {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2.6mm;
+    margin-top: 2mm;
+  }
+  .priority {
+    background: rgba(255,255,255,0.10);
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 2.5mm;
+    padding: 2.6mm 3mm 2.2mm;
+    position: relative;
+    min-height: 30mm;
+  }
+  .priority__num {
+    font-family: var(--f-display);
+    font-size: 18pt;
+    color: var(--c-oro);
+    line-height: 0.85;
+    margin-bottom: 1mm;
+    letter-spacing: -0.03em;
+  }
+  .priority__title {
+    font-family: var(--f-serif); font-weight: 700;
+    font-size: 9.5pt; line-height: 1.05;
+    color: white;
+    margin-bottom: 1.2mm;
+  }
+  .priority__text {
+    font-family: var(--f-sans);
+    font-size: 7.5pt; line-height: 1.32;
+    color: rgba(255,255,255,0.85);
+  }
+
+  /* Footer / CTA */
+  .footer {
+    margin-top: 3mm;
+    padding-top: 4mm;
+    border-top: 1px solid rgba(255,255,255,0.18);
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 5mm;
+  }
+  .footer__cta {
+    display: flex; align-items: baseline; gap: 4mm;
+  }
+  .footer__date {
+    font-family: var(--f-display);
+    font-size: 16pt; color: var(--c-oro);
+    letter-spacing: -0.01em;
+  }
+  .footer__call {
+    font-family: var(--f-serif); font-style: italic;
+    font-size: 12pt; color: white; line-height: 1.05;
+  }
+  .footer__call strong { font-style: normal; color: var(--c-oro); font-weight: 900; }
+  .footer__url {
+    text-align: right;
+    font-size: 7pt; line-height: 1.5;
+    color: rgba(255,255,255,0.7);
+  }
+  .footer__url-big {
+    font-family: var(--f-display);
+    font-size: 9pt;
+    color: white;
+    letter-spacing: 0.02em;
+    display: block;
+    margin-bottom: 0.5mm;
+  }
+
+  /* Mandatario disclosure */
+  .mandatario {
+    margin-top: 2mm;
+    font-size: 6pt;
+    color: rgba(255,255,255,0.4);
+    text-align: center;
+    letter-spacing: 0.04em;
+  }
+  </style>
+</head>
+<body>
+  <div class="page">
+
+    <!-- Coalition strip -->
+    <div class="coalition">
+      <span class="coalition__label">La coalizione</span>
+      <span class="coalition__name" translate="no">Forza Italia</span>
+      <span class="coalition__name" translate="no">Fratelli d'Italia</span>
+      <span class="coalition__name" translate="no">Lega Salvini Premier</span>
+      <span class="coalition__name" translate="no">UDC</span>
+      <span class="coalition__name" translate="no">Noi Moderati</span>
+    </div>
+
+    <!-- Hero -->
+    <section class="hero">
+      <span class="hero__eyebrow">Il programma del centrodestra · Moncalieri 2026</span>
+      <h1 class="hero__title">Moncalieri Cambia.</h1>
+      <p class="hero__sub">Quattordici priorità concrete della coalizione che sostiene <strong>Maurizio Fontana</strong> per Sindaco. Scritte da chi conosce la città e vuole rimetterla in moto.</p>
+      <p class="hero__quote">«Dopo 32 anni serve un cambio di passo. L'esperienza di fare, la visione per cambiare. Il futuro inizia adesso.»</p>
+      <p class="hero__quote-attr">— Maurizio Fontana, candidato Sindaco</p>
+    </section>
+
+    <!-- 14 priorities grid -->
+    <div class="priorities">
+
+      <div class="priority">
+        <div class="priority__num">01</div>
+        <h3 class="priority__title">Centro storico</h3>
+        <p class="priority__text">Riapriamo Piazza Vittorio. Più accesso, più eventi, più commercio. Torniamo a far vivere il centro.</p>
+      </div>
+
+      <div class="priority">
+        <div class="priority__num">02</div>
+        <h3 class="priority__title">Sicurezza</h3>
+        <p class="priority__text">Più controlli, più luce, più telecamere. Tolleranza zero per chi non rispetta le regole.</p>
+      </div>
+
+      <div class="priority">
+        <div class="priority__num">03</div>
+        <h3 class="priority__title">Urbanistica</h3>
+        <p class="priority__text">Nuovo piano regolatore. Zero consumo di suolo. Più rigenerazione, meno burocrazia.</p>
+      </div>
+
+      <div class="priority">
+        <div class="priority__num">04</div>
+        <h3 class="priority__title">Ambiente</h3>
+        <p class="priority__text">Stop degrado e abbandono. Cura del territorio, manutenzione continua, decoro urbano.</p>
+      </div>
+
+      <div class="priority">
+        <div class="priority__num">05</div>
+        <h3 class="priority__title">Accessibilità</h3>
+        <p class="priority__text">Meno barriere, più inclusione. Servizi concreti per disabilità e famiglie.</p>
+      </div>
+
+      <div class="priority">
+        <div class="priority__num">06</div>
+        <h3 class="priority__title">Borgate e comunità</h3>
+        <p class="priority__text">Più servizi, più ascolto, più presenza nei quartieri. Nessuna periferia dimenticata.</p>
+      </div>
+
+      <div class="priority">
+        <div class="priority__num">07</div>
+        <h3 class="priority__title">Attività produttive</h3>
+        <p class="priority__text">Meno tasse, meno burocrazia. Sostegno alle imprese e rilancio del commercio locale.</p>
+      </div>
+
+      <div class="priority">
+        <div class="priority__num">08</div>
+        <h3 class="priority__title">Trasporti</h3>
+        <p class="priority__text">Mobilità intelligente. Meno traffico, collegamenti migliori, trasporti pubblici efficienti.</p>
+      </div>
+
+      <div class="priority">
+        <div class="priority__num">09</div>
+        <h3 class="priority__title">Agricoltura</h3>
+        <p class="priority__text">Valorizziamo le radici. Sostegno alle aziende agricole e filiera locale a km zero.</p>
+      </div>
+
+      <div class="priority">
+        <div class="priority__num">10</div>
+        <h3 class="priority__title">Cultura</h3>
+        <p class="priority__text">Cultura per tutti. Eventi, teatro, iniziative diffuse per rafforzare identità e comunità.</p>
+      </div>
+
+      <div class="priority">
+        <div class="priority__num">11</div>
+        <h3 class="priority__title">Scuole</h3>
+        <p class="priority__text">Scuole sicure e moderne. Manutenzione costante per studenti e famiglie.</p>
+      </div>
+
+      <div class="priority">
+        <div class="priority__num">12</div>
+        <h3 class="priority__title">Giovani, sport, tempo libero</h3>
+        <p class="priority__text">Più spazi e opportunità. Sport, aggregazione, partecipazione per coinvolgere i giovani.</p>
+      </div>
+
+      <div class="priority">
+        <div class="priority__num">13</div>
+        <h3 class="priority__title">Pari opportunità</h3>
+        <p class="priority__text">Rispetto e sicurezza. Sostegno concreto alle donne, prevenzione, servizi per una vera parità.</p>
+      </div>
+
+      <div class="priority">
+        <div class="priority__num">14</div>
+        <h3 class="priority__title">Animali e città pet friendly</h3>
+        <p class="priority__text">Più servizi e spazi per gli animali. Aree dedicate, decoro, città accogliente per tutti.</p>
+      </div>
+
+    </div>
+
+    <!-- Footer CTA -->
+    <div class="footer">
+      <div class="footer__cta">
+        <span class="footer__date">24 · 25 MAGGIO</span>
+        <span class="footer__call">Vota <strong>FORZA ITALIA</strong> · scrivi <strong>COCCIOLI</strong> e <strong>CURATOLA</strong></span>
+      </div>
+      <div class="footer__url">
+        <span class="footer__url-big">damianococcioli.it</span>
+        Maurizio Fontana Sindaco · Coalizione centrodestra Moncalieri
+      </div>
+    </div>
+
+    <p class="mandatario">Committente responsabile / Mandatario elettorale: Stefano Delpero — Coalizione di centrodestra Moncalieri 2026 · Messaggio elettorale</p>
+
+  </div>
+</body>
+</html>
