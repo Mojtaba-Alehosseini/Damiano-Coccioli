@@ -137,6 +137,10 @@
   .share-btn--whatsapp:hover { background: #128C7E; border-color: #128C7E; color: white; }
   .share-btn--telegram { background: #229ED9; color: white; border-color: #229ED9; }
   .share-btn--telegram:hover { background: #1A7AA6; border-color: #1A7AA6; color: white; }
+  .share-btn--facebook { background: #1877F2; color: white; border-color: #1877F2; }
+  .share-btn--facebook:hover { background: #0E5FCB; border-color: #0E5FCB; color: white; }
+  .share-btn--instagram { background: linear-gradient(135deg, #833AB4 0%, #E1306C 50%, #FCB045 100%); color: white; border-color: transparent; }
+  .share-btn--instagram:hover { filter: brightness(1.08); color: white; }
 
   .back-link { display: inline-flex; align-items: center; gap: 8px; margin-top: 40px; padding: 14px 28px; background: var(--c-azzurro-deep); color: white; border-radius: 999px; font-weight: 600; }
   .back-link:hover { background: var(--c-azzurro); color: white; }
@@ -240,19 +244,25 @@
     </div>
 
     <div class="share-row">
-      <a class="share-btn share-btn--whatsapp" id="share-whatsapp" href="#" aria-label="Condividi su WhatsApp">
+      <a class="share-btn share-btn--whatsapp" id="share-whatsapp" href="#" target="_blank" rel="noopener" aria-label="Condividi su WhatsApp">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.498 14.382c-.301-.15-1.767-.867-2.04-.966-.273-.101-.473-.15-.673.15-.197.295-.771.964-.944 1.162-.175.195-.349.21-.646.075-.3-.15-1.263-.465-2.403-1.485-.888-.795-1.484-1.77-1.66-2.07-.174-.3-.019-.465.13-.615.136-.135.301-.345.451-.523.146-.181.194-.301.297-.496.1-.21.049-.375-.025-.524-.075-.15-.672-1.62-.922-2.206-.24-.584-.487-.51-.672-.51-.172-.015-.371-.015-.571-.015-.2 0-.523.074-.797.359-.273.3-1.045 1.02-1.045 2.475s1.07 2.865 1.219 3.075c.149.195 2.105 3.195 5.1 4.485.714.3 1.27.48 1.704.629.714.227 1.365.195 1.88.121.574-.091 1.767-.721 2.016-1.426.255-.705.255-1.29.18-1.425-.074-.135-.27-.21-.57-.345m-5.446 7.443h-.016a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.971.999-3.648-.234-.374a9.86 9.86 0 0 1-1.51-5.26c0-5.45 4.436-9.884 9.888-9.884a9.825 9.825 0 0 1 6.99 2.899 9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.885-9.887 9.885M20.52 3.449C18.24 1.245 15.24 0 12.045 0 5.463 0 .104 5.334.101 11.893c0 2.096.549 4.14 1.595 5.945L0 24l6.335-1.652a11.882 11.882 0 0 0 5.71 1.447h.006c6.585 0 11.946-5.336 11.949-11.896 0-3.176-1.24-6.165-3.495-8.411"/></svg>
-        Condividi su WhatsApp
+        WhatsApp
       </a>
-      <a class="share-btn share-btn--telegram" id="share-telegram" href="#" aria-label="Condividi su Telegram">
+      <a class="share-btn share-btn--facebook" id="share-facebook" href="#" target="_blank" rel="noopener" aria-label="Condividi su Facebook">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+        Facebook
+      </a>
+      <a class="share-btn share-btn--telegram" id="share-telegram" href="#" target="_blank" rel="noopener" aria-label="Condividi su Telegram">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.464.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
         Telegram
       </a>
-      <button class="share-btn" id="share-copy" type="button">
-        <span>🔗</span> Copia link
+      <button class="share-btn share-btn--instagram" id="share-instagram" type="button" aria-label="Apri Instagram di Damiano">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+        Instagram
       </button>
-      <button class="share-btn" type="button" onclick="window.print()">
-        <span>🖨️</span> Stampa
+      <button class="share-btn" id="share-copy" type="button">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+        Copia link
       </button>
     </div>
 
@@ -269,8 +279,34 @@
   <script>
     const shareText = encodeURIComponent('Il 24 e 25 maggio Moncalieri sceglie. Vota Forza Italia, scrivi COCCIOLI (e CURATOLA per la doppia preferenza). Ecco come si fa in 3 passi:');
     const shareUrl = encodeURIComponent(location.href);
+    const instagramProfile = 'https://www.instagram.com/damianococcioli/';
+
     document.getElementById('share-whatsapp').href = 'https://api.whatsapp.com/send?text=' + shareText + '%20' + shareUrl;
     document.getElementById('share-telegram').href = 'https://t.me/share/url?url=' + shareUrl + '&text=' + shareText;
+    document.getElementById('share-facebook').href = 'https://www.facebook.com/sharer/sharer.php?u=' + shareUrl + '&quote=' + shareText;
+
+    // Instagram: copy link + open profile
+    const igBtn = document.getElementById('share-instagram');
+    if (igBtn) {
+      igBtn.addEventListener('click', async () => {
+        try {
+          if (navigator.clipboard) {
+            await navigator.clipboard.writeText(location.href);
+            const orig = igBtn.innerHTML;
+            igBtn.innerHTML = '<span>✓</span> Link copiato — apri Instagram';
+            setTimeout(() => {
+              igBtn.innerHTML = orig;
+              window.open(instagramProfile, '_blank', 'noopener');
+            }, 900);
+          } else {
+            window.open(instagramProfile, '_blank', 'noopener');
+          }
+        } catch (e) {
+          window.open(instagramProfile, '_blank', 'noopener');
+        }
+      });
+    }
+
     const copyBtn = document.getElementById('share-copy');
     if (copyBtn && navigator.clipboard) {
       copyBtn.addEventListener('click', async () => {
