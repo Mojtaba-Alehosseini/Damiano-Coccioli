@@ -47,8 +47,16 @@
 
   function pageKey() {
     let p = location.pathname.replace(/^\/+|\/+$/g, '');
+    // Strip known base paths (e.g. GH Pages project path) so counter keys are stable
+    // across deployments at different roots.
+    const BASE_PREFIXES = ['damiano-coccioli', 'damiano-website'];
+    for (const prefix of BASE_PREFIXES) {
+      const lower = p.toLowerCase();
+      if (lower === prefix) { p = ''; break; }
+      if (lower.startsWith(prefix + '/')) { p = p.substring(prefix.length + 1); break; }
+    }
     if (!p) p = 'home';
-    return p.replace(/\//g, '-').substring(0, 40) || 'home';
+    return p.toLowerCase().replace(/\//g, '-').substring(0, 40) || 'home';
   }
 
   async function track() {
