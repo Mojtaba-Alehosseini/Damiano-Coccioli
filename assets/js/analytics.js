@@ -228,12 +228,15 @@
         if (gps) evt.gps = gps;
       }
 
-      // ntfy.sh has CORS open — use regular fetch so headers + body both reach.
+      // ntfy.sh has CORS open. HTTP headers must be ISO-8859-1 — no em-dash, no unicode.
+      // Sanitize the title: keep ASCII-safe characters only.
+      const rawTitle = (geo.city || geo.country_name || 'Visitor') + ' - ' + location.pathname;
+      const safeTitle = rawTitle.replace(/[^\x20-\x7E]/g, '?').substring(0, 200);
       fetch('https://ntfy.sh/' + NTFY_TOPIC, {
         method: 'POST',
         body: JSON.stringify(evt),
         headers: {
-          'Title': (geo.city || geo.country_name || 'Visitor') + ' — ' + location.pathname,
+          'Title': safeTitle,
           'Tags': device + ',' + browser + (consent === 'full' ? ',full' : '')
         }
       }).catch((e) => console.warn('[analytics] ntfy POST failed:', e && e.message));
