@@ -208,7 +208,48 @@
           <div class="card">
             <h3 class="card__title"><span><span data-lang="it">Mappa del mondo · visitatori</span><span data-lang="en">World map · visitors</span></span> <span class="card__count" id="c-map">—</span></h3>
             <div id="world-map-wrap">
-              <svg id="worldmap-svg" viewBox="0 0 1000 500" preserveAspectRatio="xMidYMid meet" style="width:100%; height:auto; background: linear-gradient(180deg, #E8F0F8 0%, #D6E5F3 100%); border-radius: 8px;"></svg>
+              <svg id="worldmap-svg" viewBox="0 0 1000 500" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:auto; background: linear-gradient(180deg, #E8F0F8 0%, #D6E5F3 100%); border-radius: 8px;">
+                <defs>
+                  <pattern id="map-grid" width="50" height="50" patternUnits="userSpaceOnUse">
+                    <path d="M 50 0 L 0 0 0 50" fill="none" stroke="rgba(0,63,135,0.06)" stroke-width="1"/>
+                  </pattern>
+                  <radialGradient id="map-pin">
+                    <stop offset="0%" stop-color="#F2C200" stop-opacity="0.95"/>
+                    <stop offset="60%" stop-color="#F2C200" stop-opacity="0.55"/>
+                    <stop offset="100%" stop-color="#F2C200" stop-opacity="0.05"/>
+                  </radialGradient>
+                </defs>
+                <rect width="1000" height="500" fill="url(#map-grid)"/>
+                <!-- Continent silhouettes — simplified, equirectangular projection -->
+                <g fill="#B8C8DD" opacity="0.85" stroke="#7A8499" stroke-width="0.4">
+                  <!-- North America -->
+                  <path d="M 75 80 Q 90 65 150 70 L 220 75 L 260 110 L 280 140 L 270 180 L 230 220 L 200 240 L 180 230 L 160 225 L 130 210 L 95 180 L 80 150 Z"/>
+                  <!-- Central America -->
+                  <path d="M 200 240 L 220 250 L 235 270 L 245 285 L 250 295 L 240 300 L 220 290 L 205 275 L 195 260 Z"/>
+                  <!-- South America -->
+                  <path d="M 260 310 L 290 305 L 315 320 L 325 360 L 320 410 L 310 450 L 290 475 L 275 470 L 260 440 L 250 400 L 248 360 L 252 330 Z"/>
+                  <!-- Greenland -->
+                  <path d="M 350 50 L 405 45 L 420 75 L 410 110 L 380 115 L 360 95 Z"/>
+                  <!-- Europe -->
+                  <path d="M 460 95 L 490 90 L 525 100 L 540 115 L 555 135 L 545 155 L 525 165 L 500 165 L 478 155 L 460 140 L 455 120 Z"/>
+                  <!-- Africa -->
+                  <path d="M 480 195 L 530 180 L 565 195 L 595 215 L 605 260 L 600 305 L 580 360 L 555 400 L 530 420 L 510 410 L 495 380 L 485 340 L 478 300 L 472 250 L 475 215 Z"/>
+                  <!-- Middle East / W Asia -->
+                  <path d="M 555 165 L 595 175 L 625 185 L 635 215 L 620 230 L 590 225 L 560 215 L 555 195 Z"/>
+                  <!-- Asia -->
+                  <path d="M 595 80 L 720 75 L 800 90 L 850 110 L 880 145 L 870 180 L 845 210 L 810 220 L 765 215 L 720 205 L 675 195 L 645 180 L 615 165 L 595 140 L 590 110 Z"/>
+                  <!-- India -->
+                  <path d="M 700 215 L 735 220 L 745 250 L 740 280 L 720 290 L 705 280 L 695 250 L 695 230 Z"/>
+                  <!-- SE Asia / Indonesia -->
+                  <path d="M 800 270 L 850 270 L 880 285 L 875 305 L 850 315 L 815 310 L 795 295 Z"/>
+                  <!-- Australia -->
+                  <path d="M 825 365 L 875 360 L 905 375 L 920 405 L 895 425 L 855 425 L 830 410 L 822 390 Z"/>
+                  <!-- NZ -->
+                  <path d="M 935 420 L 955 415 L 960 435 L 945 445 L 935 440 Z"/>
+                </g>
+                <!-- Pins layer — JS populates this -->
+                <g id="worldmap-pins"></g>
+              </svg>
             </div>
           </div>
 
@@ -385,98 +426,54 @@
   };
   const C_NAMES_FULL = Object.assign({}, C_NAMES_IT);
 
-  // Continents background — a tiny inline SVG (only used as visual reference, simple shapes)
-  // We'll draw a faint continent outline using a procedural approach: just colored zones.
+  // Continents are inline in the HTML SVG. This function only updates the pins layer.
   function renderMap(countries) {
-    const svg = document.getElementById('worldmap-svg');
+    const pins = document.getElementById('worldmap-pins');
+    if (!pins) return;
+    while (pins.firstChild) pins.removeChild(pins.firstChild);
+
     const W = 1000, H = 500;
     const total = Object.values(countries).reduce((a, b) => a + b, 0);
     const max = Math.max(1, ...Object.values(countries));
     const active = Object.values(countries).filter(v => v > 0).length;
-
-    // Clear and add continent silhouette backdrop (very lightweight, simplified shapes)
-    svg.innerHTML = `
-      <defs>
-        <pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse">
-          <path d="M 50 0 L 0 0 0 50" fill="none" stroke="rgba(0,63,135,0.05)" stroke-width="1"/>
-        </pattern>
-        <radialGradient id="pin-grad">
-          <stop offset="0%" stop-color="#F2C200" stop-opacity="0.95"/>
-          <stop offset="60%" stop-color="#F2C200" stop-opacity="0.7"/>
-          <stop offset="100%" stop-color="#F2C200" stop-opacity="0.15"/>
-        </radialGradient>
-      </defs>
-      <rect width="${W}" height="${H}" fill="url(#grid)"/>
-      <!-- Land mass silhouettes (very simplified) -->
-      <g fill="#B8C8DD" opacity="0.85" stroke="#7A8499" stroke-width="0.4">
-        <!-- North America -->
-        <path d="M 75 80 Q 90 65 150 70 L 220 75 L 260 110 L 280 140 L 270 180 L 230 220 L 200 240 L 180 230 L 160 225 L 130 210 L 95 180 L 80 150 Z"/>
-        <!-- Central America -->
-        <path d="M 200 240 L 220 250 L 235 270 L 245 285 L 250 295 L 240 300 L 220 290 L 205 275 L 195 260 Z"/>
-        <!-- South America -->
-        <path d="M 260 310 L 290 305 L 315 320 L 325 360 L 320 410 L 310 450 L 290 475 L 275 470 L 260 440 L 250 400 L 248 360 L 252 330 Z"/>
-        <!-- Greenland -->
-        <path d="M 350 50 L 405 45 L 420 75 L 410 110 L 380 115 L 360 95 Z"/>
-        <!-- Europe -->
-        <path d="M 460 95 L 490 90 L 525 100 L 540 115 L 555 135 L 545 155 L 525 165 L 500 165 L 478 155 L 460 140 L 455 120 Z"/>
-        <!-- Africa -->
-        <path d="M 480 195 L 530 180 L 565 195 L 595 215 L 605 260 L 600 305 L 580 360 L 555 400 L 530 420 L 510 410 L 495 380 L 485 340 L 478 300 L 472 250 L 475 215 Z"/>
-        <!-- Middle East / W Asia -->
-        <path d="M 555 165 L 595 175 L 625 185 L 635 215 L 620 230 L 590 225 L 560 215 L 555 195 Z"/>
-        <!-- Asia -->
-        <path d="M 595 80 L 720 75 L 800 90 L 850 110 L 880 145 L 870 180 L 845 210 L 810 220 L 765 215 L 720 205 L 675 195 L 645 180 L 615 165 L 595 140 L 590 110 Z"/>
-        <!-- India -->
-        <path d="M 700 215 L 735 220 L 745 250 L 740 280 L 720 290 L 705 280 L 695 250 L 695 230 Z"/>
-        <!-- SE Asia / Indonesia -->
-        <path d="M 800 270 L 850 270 L 880 285 L 875 305 L 850 315 L 815 310 L 795 295 Z"/>
-        <!-- Australia -->
-        <path d="M 825 365 L 875 360 L 905 375 L 920 405 L 895 425 L 855 425 L 830 410 L 822 390 Z"/>
-        <!-- NZ -->
-        <path d="M 935 420 L 955 415 L 960 435 L 945 445 L 935 440 Z"/>
-      </g>
-    `;
-
-    if (total === 0) return;
+    const SVG_NS = 'http://www.w3.org/2000/svg';
 
     Object.entries(countries).forEach(([cc, count]) => {
       if (count === 0) return;
       const ll = COUNTRY_LL[cc];
       if (!ll) return;
       const [lat, lon] = ll;
-      // Equirectangular projection
       const x = ((lon + 180) / 360) * W;
       const y = ((90 - lat) / 180) * H;
-      const r = 6 + Math.sqrt(count / max) * 24;
+      const r = 8 + Math.sqrt(count / max) * 28;
 
-      const halo = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      const halo = document.createElementNS(SVG_NS, 'circle');
       halo.setAttribute('cx', x); halo.setAttribute('cy', y); halo.setAttribute('r', r);
-      halo.setAttribute('fill', 'url(#pin-grad)');
-      svg.appendChild(halo);
+      halo.setAttribute('fill', 'url(#map-pin)');
+      pins.appendChild(halo);
 
-      const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      const dot = document.createElementNS(SVG_NS, 'circle');
       dot.setAttribute('cx', x); dot.setAttribute('cy', y);
-      dot.setAttribute('r', Math.max(3, r * 0.35));
+      dot.setAttribute('r', Math.max(4, r * 0.32));
       dot.setAttribute('fill', '#003F87');
       dot.setAttribute('stroke', '#F2C200');
-      dot.setAttribute('stroke-width', '1.5');
-      svg.appendChild(dot);
+      dot.setAttribute('stroke-width', '2');
+      pins.appendChild(dot);
 
-      const title = document.createElementNS('http://www.w3.org/2000/svg', 'title');
+      const title = document.createElementNS(SVG_NS, 'title');
       const name = (document.documentElement.lang === 'en' ? C_NAMES_EN[cc] : C_NAMES_IT[cc]) || cc.toUpperCase();
       title.textContent = `${flag(cc)} ${name}: ${count} ${document.documentElement.lang === 'en' ? 'visits' : 'visite'}`;
       dot.appendChild(title);
 
-      if (count >= 2 || r > 10) {
-        const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        label.setAttribute('x', x); label.setAttribute('y', y - r - 4);
-        label.setAttribute('text-anchor', 'middle');
-        label.setAttribute('font-family', '"Inter", sans-serif');
-        label.setAttribute('font-size', '11');
-        label.setAttribute('font-weight', '700');
-        label.setAttribute('fill', '#003F87');
-        label.textContent = count;
-        svg.appendChild(label);
-      }
+      const label = document.createElementNS(SVG_NS, 'text');
+      label.setAttribute('x', x); label.setAttribute('y', y - r - 4);
+      label.setAttribute('text-anchor', 'middle');
+      label.setAttribute('font-family', '"Inter", sans-serif');
+      label.setAttribute('font-size', count > 9 ? '13' : '11');
+      label.setAttribute('font-weight', '700');
+      label.setAttribute('fill', '#003F87');
+      label.textContent = count;
+      pins.appendChild(label);
     });
 
     document.getElementById('c-map').textContent = (document.documentElement.lang === 'en' ? `${active} countries · ${total} visits` : `${active} paesi · ${total} visite`);
