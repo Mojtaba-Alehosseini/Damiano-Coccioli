@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#003F87" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Analytics · Damiano Coccioli</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%23001E45'/><text x='32' y='44' font-family='Arial Black,Impact,sans-serif' font-size='34' font-weight='900' fill='%23F2C200' text-anchor='middle' letter-spacing='-1'>A</text></svg>" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,700;0,900;1,400&family=Inter:wght@400;500;600;700&family=Archivo+Black&family=JetBrains+Mono:wght@400;700&display=swap" />
+
+  <style>
+  /* Same design tokens as the main site */
+  :root {
+    --c-azzurro: #0096D6;
+    --c-azzurro-deep: #003F87;
+    --c-azzurro-night: #001E45;
+    --c-oro: #F2C200;
+    --c-oro-deep: #C69900;
+    --c-lilla: #B6A6CA;
+    --c-bianco: #FFFFFF;
+    --c-grigio-cielo: #F4F7FB;
+    --c-grigio-bordo: #E1E8F2;
+    --c-grafite: #1A2230;
+    --c-grafite-soft: #4A5363;
+    --c-grafite-muted: #7A8499;
+    --c-success: #2E7D32;
+    --c-warn: #B8520A;
+    --f-serif: "Fraunces", Georgia, serif;
+    --f-sans: "Inter", system-ui, sans-serif;
+    --f-display: "Archivo Black", sans-serif;
+    --f-mono: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { font-family: var(--f-sans); font-size: 15px; line-height: 1.6; color: var(--c-grafite); background: var(--c-grigio-cielo); min-height: 100vh; }
+  a { color: var(--c-azzurro-deep); text-decoration: none; }
+  a:hover { color: var(--c-azzurro); }
+  button { font-family: inherit; cursor: pointer; }
+
+  /* ===== Password gate ===== */
+  .gate {
+    position: fixed; inset: 0;
+    background: linear-gradient(135deg, var(--c-azzurro-night) 0%, var(--c-azzurro-deep) 100%);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 9999; padding: 24px;
+  }
+  .gate__card {
+    background: white; border-radius: 16px;
+    padding: 40px 36px; max-width: 380px; width: 100%;
+    box-shadow: 0 24px 64px rgba(0,30,69,0.4);
+    text-align: center;
+  }
+  .gate__icon {
+    width: 64px; height: 64px; margin: 0 auto 20px;
+    background: var(--c-azzurro-night); color: var(--c-oro);
+    border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--f-display); font-size: 28px; letter-spacing: -1px;
+  }
+  .gate__title { font-family: var(--f-serif); font-style: italic; font-size: 28px; color: var(--c-azzurro-night); margin-bottom: 8px; }
+  .gate__sub { font-size: 13px; color: var(--c-grafite-soft); margin-bottom: 24px; }
+  .gate__input {
+    width: 100%; padding: 14px 16px;
+    border: 2px solid var(--c-grigio-bordo); border-radius: 10px;
+    font-family: var(--f-mono); font-size: 15px;
+    outline: none; transition: border-color 150ms;
+  }
+  .gate__input:focus { border-color: var(--c-azzurro); }
+  .gate__err { color: var(--c-warn); font-size: 13px; margin-top: 12px; min-height: 18px; }
+  .gate__btn {
+    width: 100%; margin-top: 16px;
+    padding: 14px; border: none; border-radius: 10px;
+    background: var(--c-oro); color: var(--c-azzurro-night);
+    font-weight: 700; font-size: 15px;
+    transition: all 150ms;
+  }
+  .gate__btn:hover { background: var(--c-oro-deep); transform: translateY(-1px); }
+
+  /* ===== Dashboard ===== */
+  .dashboard { display: none; }
+  body.unlocked .dashboard { display: block; }
+  body.unlocked .gate { display: none; }
+
+  .header {
+    background: var(--c-azzurro-night); color: white;
+    padding: 20px 28px;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 16px;
+    border-bottom: 3px solid var(--c-oro);
+  }
+  .header__left { display: flex; align-items: center; gap: 14px; }
+  .header__mark { width: 36px; height: 36px; background: var(--c-azzurro-deep); color: var(--c-oro); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-family: var(--f-display); font-size: 16px; }
+  .header__title { font-family: var(--f-serif); font-style: italic; font-size: 22px; line-height: 1; }
+  .header__sub { font-size: 11px; color: rgba(255,255,255,0.65); letter-spacing: 0.12em; text-transform: uppercase; font-weight: 600; margin-top: 4px; }
+  .header__actions { display: flex; gap: 10px; align-items: center; }
+  .badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.18);
+    padding: 6px 12px; border-radius: 999px;
+    font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+    color: rgba(255,255,255,0.85);
+  }
+  .badge--live::before { content: ""; width: 8px; height: 8px; background: #4ADE80; border-radius: 50%; animation: pulse 1.5s ease-in-out infinite; }
+  @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.6; transform: scale(1.3); } }
+  .btn {
+    padding: 8px 14px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.3);
+    background: rgba(255,255,255,0.08); color: white;
+    font-size: 12px; font-weight: 600;
+    transition: all 150ms;
+  }
+  .btn:hover { background: rgba(255,255,255,0.16); }
+
+  .container { max-width: 1400px; margin: 0 auto; padding: 28px; }
+
+  /* Top stat tiles */
+  .tiles {
+    display: grid; gap: 16px;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    margin-bottom: 28px;
+  }
+  .tile {
+    background: white;
+    border-radius: 12px;
+    padding: 22px 24px;
+    box-shadow: 0 2px 8px rgba(26,34,48,0.06);
+    border-top: 3px solid var(--c-azzurro);
+  }
+  .tile--gold { border-top-color: var(--c-oro); }
+  .tile--green { border-top-color: var(--c-success); }
+  .tile--lilac { border-top-color: var(--c-lilla); }
+  .tile__label { font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--c-grafite-muted); margin-bottom: 8px; }
+  .tile__num { font-family: var(--f-display); font-size: 36px; color: var(--c-azzurro-night); line-height: 1; letter-spacing: -0.02em; }
+  .tile__delta { font-size: 12px; color: var(--c-success); margin-top: 4px; font-weight: 600; }
+
+  /* Cards */
+  .grid {
+    display: grid; gap: 20px;
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 900px) {
+    .grid { grid-template-columns: 1.2fr 1fr; }
+  }
+  .card {
+    background: white; border-radius: 12px;
+    padding: 22px 24px;
+    box-shadow: 0 2px 8px rgba(26,34,48,0.06);
+    margin-bottom: 20px;
+  }
+  .card__title {
+    font-family: var(--f-serif);
+    font-size: 18px; color: var(--c-azzurro-night);
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--c-grigio-bordo);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .card__count {
+    font-family: var(--f-mono);
+    font-size: 12px; color: var(--c-grafite-muted);
+    font-weight: 600;
+  }
+
+  /* Bar list */
+  .barlist { display: flex; flex-direction: column; gap: 8px; }
+  .bar {
+    display: grid;
+    grid-template-columns: 24px 1fr 56px;
+    gap: 10px; align-items: center;
+    padding: 6px 0;
+    position: relative;
+  }
+  .bar__icon { font-size: 16px; line-height: 1; text-align: center; }
+  .bar__body { position: relative; }
+  .bar__label { font-size: 13px; font-weight: 600; color: var(--c-grafite); position: relative; z-index: 2; padding: 4px 8px; }
+  .bar__fill {
+    position: absolute; left: 0; top: 0; bottom: 0;
+    background: linear-gradient(90deg, var(--c-azzurro) 0%, rgba(0,150,214,0.18) 100%);
+    border-radius: 4px;
+    z-index: 1;
+    min-width: 4px;
+    transition: width 320ms ease-out;
+  }
+  .bar__val { font-family: var(--f-mono); font-size: 13px; font-weight: 700; color: var(--c-azzurro-deep); text-align: right; }
+  .bar--gold .bar__fill { background: linear-gradient(90deg, var(--c-oro) 0%, rgba(242,194,0,0.2) 100%); }
+  .bar--gold .bar__val { color: var(--c-oro-deep); }
+
+  /* Hour heatmap */
+  .heatmap { display: grid; grid-template-columns: repeat(24, 1fr); gap: 3px; }
+  .heat-cell {
+    aspect-ratio: 1;
+    background: var(--c-grigio-cielo);
+    border-radius: 3px;
+    position: relative;
+    cursor: help;
+    transition: transform 100ms;
+  }
+  .heat-cell:hover { transform: scale(1.2); z-index: 2; }
+  .heat-cell[data-level="0"] { background: #F4F7FB; }
+  .heat-cell[data-level="1"] { background: #D6E5F3; }
+  .heat-cell[data-level="2"] { background: #95C3E6; }
+  .heat-cell[data-level="3"] { background: #4A9DD4; }
+  .heat-cell[data-level="4"] { background: #0096D6; }
+  .heat-cell[data-level="5"] { background: #003F87; }
+  .heat-row { display: flex; justify-content: space-between; font-family: var(--f-mono); font-size: 10px; color: var(--c-grafite-muted); margin-top: 6px; }
+
+  /* Live feed */
+  .feed { max-height: 540px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; padding-right: 6px; }
+  .feed::-webkit-scrollbar { width: 6px; }
+  .feed::-webkit-scrollbar-thumb { background: var(--c-grigio-bordo); border-radius: 3px; }
+  .feed__item {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 12px;
+    padding: 10px 12px;
+    background: var(--c-grigio-cielo);
+    border-radius: 8px;
+    border-left: 3px solid var(--c-azzurro);
+    animation: slideIn 250ms ease-out;
+    align-items: center;
+  }
+  .feed__item--new { border-left-color: var(--c-oro); animation: highlight 1500ms ease-out; }
+  @keyframes slideIn { from { opacity: 0; transform: translateX(-8px); } to { opacity: 1; transform: translateX(0); } }
+  @keyframes highlight { 0% { background: #FFF8E1; } 100% { background: var(--c-grigio-cielo); } }
+  .feed__flag { font-size: 22px; line-height: 1; }
+  .feed__body { min-width: 0; }
+  .feed__row1 { display: flex; gap: 8px; align-items: baseline; font-size: 13px; }
+  .feed__loc { font-weight: 700; color: var(--c-azzurro-deep); }
+  .feed__page { font-family: var(--f-mono); font-size: 11px; color: var(--c-grafite-muted); }
+  .feed__row2 { font-size: 11px; color: var(--c-grafite-muted); margin-top: 2px; display: flex; gap: 8px; flex-wrap: wrap; }
+  .feed__time { font-family: var(--f-mono); font-size: 11px; color: var(--c-grafite-muted); white-space: nowrap; }
+
+  .empty { padding: 40px 20px; text-align: center; color: var(--c-grafite-muted); font-style: italic; font-size: 13px; }
+
+  /* Status footer */
+  .footer-bar { padding: 20px 28px; text-align: center; font-size: 11px; color: var(--c-grafite-muted); letter-spacing: 0.06em; text-transform: uppercase; }
+
+  /* Mobile tweaks */
+  @media (max-width: 600px) {
+    .container { padding: 20px 16px; }
+    .header { padding: 16px 18px; }
+    .tile__num { font-size: 30px; }
+    .card { padding: 18px 18px; }
+  }
+  </style>
+</head>
+<body>
+
+  <!-- ============ PASSWORD GATE ============ -->
+  <div class="gate" id="gate">
+    <div class="gate__card">
+      <div class="gate__icon">A</div>
+      <h1 class="gate__title">Analytics</h1>
+      <p class="gate__sub">Dashboard privata · Damiano Coccioli 2026</p>
+      <input type="password" class="gate__input" id="pw" placeholder="password" autocomplete="off" autofocus />
+      <p class="gate__err" id="err"></p>
+      <button class="gate__btn" id="unlock">Entra</button>
+    </div>
+  </div>
+
+  <!-- ============ DASHBOARD ============ -->
+  <div class="dashboard">
+    <header class="header">
+      <div class="header__left">
+        <div class="header__mark">DC</div>
+        <div>
+          <div class="header__title">Analytics — Damiano Coccioli</div>
+          <div class="header__sub">Campagna Moncalieri 2026 · dashboard privata</div>
+        </div>
+      </div>
+      <div class="header__actions">
+        <span class="badge badge--live">Live</span>
+        <span class="badge" id="last-updated">—</span>
+        <button class="btn" id="refresh">↻ Aggiorna</button>
+        <button class="btn" id="logout">Esci</button>
+      </div>
+    </header>
+
+    <div class="container">
+
+      <!-- Top tiles -->
+      <div class="tiles">
+        <div class="tile tile--gold">
+          <div class="tile__label">Visite totali</div>
+          <div class="tile__num" id="t-total">—</div>
+        </div>
+        <div class="tile">
+          <div class="tile__label">Oggi</div>
+          <div class="tile__num" id="t-today">—</div>
+        </div>
+        <div class="tile tile--green">
+          <div class="tile__label">Paesi unici</div>
+          <div class="tile__num" id="t-countries">—</div>
+        </div>
+        <div class="tile tile--lilac">
+          <div class="tile__label">Eventi nel feed</div>
+          <div class="tile__num" id="t-events">0</div>
+        </div>
+      </div>
+
+      <!-- Two-column grid -->
+      <div class="grid">
+        <div>
+          <!-- Top pages -->
+          <div class="card">
+            <h3 class="card__title">Pagine più visitate <span class="card__count" id="c-pages">—</span></h3>
+            <div class="barlist" id="pages-list"><p class="empty">Caricamento…</p></div>
+          </div>
+
+          <!-- Countries -->
+          <div class="card">
+            <h3 class="card__title">Paesi <span class="card__count" id="c-countries">—</span></h3>
+            <div class="barlist" id="countries-list"><p class="empty">Caricamento…</p></div>
+          </div>
+
+          <!-- Referrers -->
+          <div class="card">
+            <h3 class="card__title">Sorgenti di traffico <span class="card__count" id="c-refs">—</span></h3>
+            <div class="barlist" id="refs-list"><p class="empty">Caricamento…</p></div>
+          </div>
+
+          <!-- Hour heatmap -->
+          <div class="card">
+            <h3 class="card__title">Distribuzione per ora (UTC)</h3>
+            <div class="heatmap" id="heatmap"></div>
+            <div class="heat-row"><span>00</span><span>06</span><span>12</span><span>18</span><span>23</span></div>
+          </div>
+        </div>
+
+        <div>
+          <!-- Device + Browser -->
+          <div class="card">
+            <h3 class="card__title">Dispositivo</h3>
+            <div class="barlist" id="devices-list"><p class="empty">Caricamento…</p></div>
+          </div>
+
+          <div class="card">
+            <h3 class="card__title">Browser</h3>
+            <div class="barlist" id="browsers-list"><p class="empty">Caricamento…</p></div>
+          </div>
+
+          <div class="card">
+            <h3 class="card__title">Lingue</h3>
+            <div class="barlist" id="langs-list"><p class="empty">Caricamento…</p></div>
+          </div>
+
+          <!-- Live feed -->
+          <div class="card">
+            <h3 class="card__title">Live · visite in tempo reale <span class="card__count" id="c-live">in ascolto…</span></h3>
+            <div class="feed" id="feed"><p class="empty">In attesa del primo evento…</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="footer-bar">
+      Dati anonimi aggregati · solo aggregati, nessun cookie · refresh automatico ogni 30 s
+    </footer>
+  </div>
+
+  <script>
+  /* =========================================================================
+     Dashboard logic
+     ========================================================================= */
+
+  // ===== Password gate =====
+  const PWHASH = '6214e3da247ae86a8948d78c06e8427d1c0faff6bb32d344a17fb0e75dca879b';
+  // The password is set during deployment; the hash above corresponds to it.
+  // Default for this deployment is documented to the site owner separately.
+
+  async function sha256(s) {
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s));
+    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+
+  async function tryUnlock() {
+    const input = document.getElementById('pw');
+    const err = document.getElementById('err');
+    const v = (input.value || '').trim();
+    if (!v) return;
+    const h = await sha256(v);
+    if (h === PWHASH) {
+      document.body.classList.add('unlocked');
+      sessionStorage.setItem('_dc_admin_ok', '1');
+      start();
+    } else {
+      err.textContent = 'Password errata.';
+      input.value = '';
+      input.focus();
+    }
+  }
+
+  document.getElementById('unlock').addEventListener('click', tryUnlock);
+  document.getElementById('pw').addEventListener('keydown', e => { if (e.key === 'Enter') tryUnlock(); });
+
+  // Auto-unlock if already authenticated in session
+  if (sessionStorage.getItem('_dc_admin_ok') === '1') {
+    document.body.classList.add('unlocked');
+    // small delay then start so DOM is ready
+    setTimeout(start, 0);
+  }
+
+  document.getElementById('logout').addEventListener('click', () => {
+    sessionStorage.removeItem('_dc_admin_ok');
+    location.reload();
+  });
+
+  // ===== Analytics constants (must match analytics.js) =====
+  const NAMESPACE = 'dc-coccioli-mc26-x7k9p';
+  const NTFY_TOPIC = 'dc-coccioli-live-x7k9p2m';
+  const COUNTER_GET = 'https://abacus.jasoncameron.dev/get/' + NAMESPACE;
+
+  // Known counter keys we want to read
+  const KEYS = {
+    total: 'total',
+    pages: ['home', 'come-votare', 'programma-completo', 'programma-coccioli', 'privacy', 'cookie', 'admin-dc-2026', 'grazie'],
+    devices: ['mobile', 'desktop', 'tablet'],
+    browsers: ['chrome', 'safari', 'firefox', 'edge', 'opera', 'samsung', 'other'],
+    langs: ['it', 'en', 'fr', 'de', 'es', 'pt', 'zh', 'ja', 'ru', 'ar', 'nl', 'pl'],
+    countries: ['it', 'us', 'gb', 'fr', 'de', 'es', 'ch', 'at', 'be', 'nl', 'ca', 'au', 'ar', 'br', 'mx', 'jp', 'cn', 'in', 'ru', 'pl', 'pt', 'cz', 'se', 'no', 'dk', 'fi', 'gr', 'tr', 'ua', 'ro', 'ir', 'mt', 'lu'],
+    refs: ['direct', 'instagram_com', 'facebook_com', 'whatsapp_com', 'web_whatsapp_com', 'l_instagram_com', 'l_facebook_com', 'google_com', 'www_google_com', 'm_facebook_com', 't_co', 'telegram_org', 'web_telegram_org', 'mojtaba_alehosseini_github_io', 'github_com'],
+  };
+
+  // Country code to flag emoji
+  function flag(cc) {
+    if (!cc || cc.length !== 2) return '🌐';
+    const A = 0x1F1E6;
+    const off = c => c.toUpperCase().charCodeAt(0) - 65;
+    return String.fromCodePoint(A + off(cc[0])) + String.fromCodePoint(A + off(cc[1]));
+  }
+
+  // Country code → readable name (minimal subset)
+  const C_NAMES = {it:'Italia',us:'Stati Uniti',gb:'Regno Unito',fr:'Francia',de:'Germania',es:'Spagna',ch:'Svizzera',at:'Austria',be:'Belgio',nl:'Paesi Bassi',ca:'Canada',au:'Australia',ar:'Argentina',br:'Brasile',mx:'Messico',jp:'Giappone',cn:'Cina',in:'India',ru:'Russia',pl:'Polonia',pt:'Portogallo',cz:'Cechia',se:'Svezia',no:'Norvegia',dk:'Danimarca',fi:'Finlandia',gr:'Grecia',tr:'Turchia',ua:'Ucraina',ro:'Romania',ir:'Iran',mt:'Malta',lu:'Lussemburgo'};
+
+  // Browser → icon
+  const B_ICONS = { chrome: '🌐', safari: '🧭', firefox: '🦊', edge: '🔷', opera: '🅾', samsung: '📱', other: '❓' };
+  const D_ICONS = { mobile: '📱', desktop: '🖥️', tablet: '📱' };
+  const L_NAMES = { it: 'Italiano', en: 'English', fr: 'Français', de: 'Deutsch', es: 'Español', pt: 'Português', zh: '中文', ja: '日本語', ru: 'Русский', ar: 'العربية', nl: 'Nederlands', pl: 'Polski' };
+
+  // ===== Fetch counter helpers =====
+  async function getCounter(key) {
+    try {
+      const r = await fetch(COUNTER_GET + '/' + encodeURIComponent(key));
+      if (!r.ok) return 0;
+      const d = await r.json();
+      return parseInt(d.value || 0, 10);
+    } catch (e) { return 0; }
+  }
+
+  async function getCounters(prefix, keys) {
+    const out = {};
+    await Promise.all(keys.map(async (k) => {
+      out[k] = await getCounter(prefix + '-' + k);
+    }));
+    return out;
+  }
+
+  // ===== Render =====
+  function renderBars(containerId, data, opts) {
+    const el = document.getElementById(containerId);
+    const items = Object.entries(data)
+      .filter(([, v]) => v > 0)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, opts && opts.limit || 10);
+    if (items.length === 0) { el.innerHTML = '<p class="empty">Nessun dato ancora.</p>'; return; }
+    const max = items[0][1];
+    el.innerHTML = items.map(([k, v]) => {
+      const pct = (v / max) * 100;
+      const icon = (opts && opts.icon) ? opts.icon(k) : '';
+      const label = (opts && opts.label) ? opts.label(k) : k;
+      const cls = opts && opts.gold ? 'bar--gold' : '';
+      return `<div class="bar ${cls}">
+        <div class="bar__icon">${icon}</div>
+        <div class="bar__body">
+          <div class="bar__fill" style="width:${pct.toFixed(1)}%"></div>
+          <div class="bar__label">${label}</div>
+        </div>
+        <div class="bar__val">${v.toLocaleString('it-IT')}</div>
+      </div>`;
+    }).join('');
+    // Update counter near title
+    if (opts && opts.countEl) {
+      document.getElementById(opts.countEl).textContent = items.length + ' attivi';
+    }
+  }
+
+  function renderHeatmap(hours) {
+    const max = Math.max(1, ...Object.values(hours));
+    const el = document.getElementById('heatmap');
+    el.innerHTML = Array.from({length: 24}, (_, h) => {
+      const v = hours[h] || 0;
+      const lvl = v === 0 ? 0 : Math.min(5, Math.ceil(v / max * 5));
+      return `<div class="heat-cell" data-level="${lvl}" title="Ora ${h}: ${v} visite"></div>`;
+    }).join('');
+  }
+
+  // ===== Load aggregate data =====
+  async function loadAll() {
+    document.getElementById('last-updated').textContent = 'Aggiornamento…';
+
+    // Total
+    const total = await getCounter('total');
+    document.getElementById('t-total').textContent = total.toLocaleString('it-IT');
+
+    // Today
+    const d = new Date();
+    const ymd = d.getUTCFullYear() + ('0' + (d.getUTCMonth() + 1)).slice(-2) + ('0' + d.getUTCDate()).slice(-2);
+    document.getElementById('t-today').textContent = (await getCounter('day-' + ymd)).toLocaleString('it-IT');
+
+    // Pages
+    const pages = await getCounters('page', KEYS.pages);
+    renderBars('pages-list', pages, { icon: () => '📄', label: k => '/' + (k === 'home' ? '' : k.replace(/-/g, '/')), countEl: 'c-pages' });
+
+    // Devices
+    const devices = await getCounters('device', KEYS.devices);
+    renderBars('devices-list', devices, { icon: k => D_ICONS[k] || '❓', label: k => k.charAt(0).toUpperCase() + k.slice(1) });
+
+    // Browsers
+    const browsers = await getCounters('browser', KEYS.browsers);
+    renderBars('browsers-list', browsers, { icon: k => B_ICONS[k] || '❓', label: k => k.charAt(0).toUpperCase() + k.slice(1) });
+
+    // Languages
+    const langs = await getCounters('lang', KEYS.langs);
+    renderBars('langs-list', langs, { icon: () => '🗣', label: k => L_NAMES[k] || k.toUpperCase() });
+
+    // Countries
+    const countries = await getCounters('country', KEYS.countries);
+    const countryActive = Object.values(countries).filter(v => v > 0).length;
+    document.getElementById('t-countries').textContent = countryActive;
+    renderBars('countries-list', countries, { icon: k => flag(k), label: k => C_NAMES[k] || k.toUpperCase(), gold: true, countEl: 'c-countries' });
+
+    // Referrers
+    const refs = await getCounters('ref', KEYS.refs);
+    renderBars('refs-list', refs, {
+      icon: k => k.includes('whatsapp') ? '💬' : k.includes('facebook') ? '📘' : k.includes('instagram') ? '📷' : k.includes('telegram') ? '✈️' : k.includes('google') ? '🔎' : k === 'direct' ? '🔗' : '↗',
+      label: k => k === 'direct' ? 'Visita diretta / WhatsApp app' : k.replace(/_/g, '.'),
+      countEl: 'c-refs'
+    });
+
+    // Hour heatmap
+    const hours = {};
+    await Promise.all(Array.from({length: 24}, async (_, h) => {
+      hours[h] = await getCounter('hour-' + h);
+    }));
+    renderHeatmap(hours);
+
+    document.getElementById('last-updated').textContent = 'Aggiornato ' + new Date().toLocaleTimeString('it-IT');
+  }
+
+  // ===== Live feed via ntfy.sh =====
+  let feedItems = [];
+
+  function pageShort(p) {
+    if (!p || p === '/') return '/';
+    return p.length > 30 ? p.substring(0, 28) + '…' : p;
+  }
+
+  function refShort(r) {
+    if (!r) return 'diretto';
+    try { return new URL(r).hostname.replace(/^www\./, ''); } catch (e) { return r.substring(0, 20); }
+  }
+
+  function timeAgo(iso) {
+    const now = new Date();
+    const t = new Date(iso);
+    const s = Math.floor((now - t) / 1000);
+    if (s < 5) return 'adesso';
+    if (s < 60) return s + 's';
+    if (s < 3600) return Math.floor(s / 60) + 'm';
+    if (s < 86400) return Math.floor(s / 3600) + 'h';
+    return Math.floor(s / 86400) + 'g';
+  }
+
+  function renderFeed() {
+    const el = document.getElementById('feed');
+    if (feedItems.length === 0) {
+      el.innerHTML = '<p class="empty">In attesa del primo evento…</p>';
+      return;
+    }
+    el.innerHTML = feedItems.slice(0, 50).map((e, i) => {
+      const fl = flag(e.country_code || '');
+      const loc = [e.city, e.country].filter(Boolean).join(', ') || 'Posizione sconosciuta';
+      const newCls = i === 0 && (Date.now() - new Date(e.ts).getTime()) < 5000 ? ' feed__item--new' : '';
+      const devIcon = D_ICONS[e.device] || '';
+      const brIcon = B_ICONS[e.browser] || '';
+      const ref = refShort(e.ref);
+      return `<div class="feed__item${newCls}">
+        <div class="feed__flag" title="${e.country_code || ''}">${fl}</div>
+        <div class="feed__body">
+          <div class="feed__row1">
+            <span class="feed__loc">${loc}</span>
+            <span class="feed__page">${pageShort(e.page)}</span>
+          </div>
+          <div class="feed__row2">
+            <span>${devIcon} ${e.device}</span>
+            <span>${brIcon} ${e.browser}</span>
+            <span>🗣 ${(e.lang || '').split('-')[0]}</span>
+            <span>↗ ${ref}</span>
+            ${e.org ? '<span title="' + e.org + '">🏢 ' + e.org.substring(0, 24) + '</span>' : ''}
+          </div>
+        </div>
+        <div class="feed__time">${timeAgo(e.ts)}</div>
+      </div>`;
+    }).join('');
+    document.getElementById('t-events').textContent = feedItems.length;
+  }
+
+  function subscribeLive() {
+    const url = 'https://ntfy.sh/' + NTFY_TOPIC + '/json?poll=1&since=24h';
+    fetch(url).then(r => r.text()).then(txt => {
+      // ntfy /json endpoint returns one JSON per line
+      const lines = txt.trim().split('\n').filter(Boolean);
+      const msgs = [];
+      lines.forEach(line => {
+        try {
+          const m = JSON.parse(line);
+          if (m.message) {
+            try {
+              const data = JSON.parse(m.message);
+              msgs.push(data);
+            } catch (e) {}
+          }
+        } catch (e) {}
+      });
+      // Show newest first
+      feedItems = msgs.reverse().concat(feedItems).filter((v, i, a) => a.findIndex(x => x.ts === v.ts && x.page === v.page) === i).slice(0, 50);
+      renderFeed();
+      document.getElementById('c-live').textContent = msgs.length + ' eventi (24h)';
+    }).catch(() => {
+      document.getElementById('c-live').textContent = 'connessione persa';
+    });
+
+    // Then open SSE for real-time
+    try {
+      const sse = new EventSource('https://ntfy.sh/' + NTFY_TOPIC + '/sse');
+      sse.onmessage = (ev) => {
+        try {
+          const m = JSON.parse(ev.data);
+          if (m.event === 'message' && m.message) {
+            try {
+              const data = JSON.parse(m.message);
+              feedItems.unshift(data);
+              feedItems = feedItems.slice(0, 50);
+              renderFeed();
+            } catch (e) {}
+          }
+        } catch (e) {}
+      };
+    } catch (e) {}
+  }
+
+  // ===== Boot =====
+  async function start() {
+    await loadAll();
+    subscribeLive();
+    // Auto-refresh aggregates every 30s
+    setInterval(loadAll, 30000);
+    // Update timestamps every 10s
+    setInterval(renderFeed, 10000);
+  }
+
+  document.getElementById('refresh').addEventListener('click', loadAll);
+  </script>
+
+</body>
+</html>
