@@ -440,21 +440,57 @@
   const D_ICONS = { mobile: '📱', desktop: '🖥️', tablet: '📱' };
   const L_NAMES = { it: 'Italiano', en: 'English', fr: 'Français', de: 'Deutsch', es: 'Español', pt: 'Português', zh: '中文', ja: '日本語', ru: 'Русский', ar: 'العربية', nl: 'Nederlands', pl: 'Polski' };
 
-  // ===== Fetch counter helpers =====
-  async function getCounter(key) {
+  // ===== Fetch counter helpers (rate-limit aware) =====
+  // abacus.jasoncameron.dev rate-limits ~30 req/sec/IP. We batch with small concurrency
+  // and retry on 429.
+  const FETCH_CACHE = {}; // session-level cache to avoid re-fetching unchanged values
+  let CACHE_AT = 0;
+
+  async function getCounter(key, retries = 2) {
+    // Use cache if fresh (last 25s)
+    if (FETCH_CACHE[key] !== undefined && (Date.now() - CACHE_AT) < 25000) {
+      return FETCH_CACHE[key];
+    }
     try {
       const r = await fetch(COUNTER_GET + '/' + encodeURIComponent(key));
-      if (!r.ok) return 0;
+      if (r.status === 429) {
+        if (retries > 0) {
+          await new Promise(res => setTimeout(res, 1500 + Math.random() * 1500));
+          return getCounter(key, retries - 1);
+        }
+        return FETCH_CACHE[key] !== undefined ? FETCH_CACHE[key] : 0;
+      }
+      if (r.status === 404) { FETCH_CACHE[key] = 0; return 0; }
+      if (!r.ok) return FETCH_CACHE[key] || 0;
       const d = await r.json();
-      return parseInt(d.value || 0, 10);
-    } catch (e) { return 0; }
+      const val = parseInt(d.value || 0, 10);
+      FETCH_CACHE[key] = val;
+      return val;
+    } catch (e) {
+      return FETCH_CACHE[key] || 0;
+    }
+  }
+
+  // Run promises with limited concurrency
+  async function pAll(tasks, concurrency = 4) {
+    const results = [];
+    let i = 0;
+    async function worker() {
+      while (i < tasks.length) {
+        const idx = i++;
+        results[idx] = await tasks[idx]();
+      }
+    }
+    await Promise.all(Array.from({length: Math.min(concurrency, tasks.length)}, worker));
+    return results;
   }
 
   async function getCounters(prefix, keys) {
     const out = {};
-    await Promise.all(keys.map(async (k) => {
+    const tasks = keys.map(k => async () => {
       out[k] = await getCounter(prefix + '-' + k);
-    }));
+    });
+    await pAll(tasks, 4);
     return out;
   }
 
@@ -497,42 +533,33 @@
     }).join('');
   }
 
-  // ===== Load aggregate data =====
+  // ===== Load aggregate data (sequential — abacus rate-limits ~30 req/s) =====
   async function loadAll() {
     document.getElementById('last-updated').textContent = 'Aggiornamento…';
+    CACHE_AT = Date.now();
 
-    // Total
+    // First the cheap-but-important ones
     const total = await getCounter('total');
     document.getElementById('t-total').textContent = total.toLocaleString('it-IT');
 
-    // Today
     const d = new Date();
     const ymd = d.getUTCFullYear() + ('0' + (d.getUTCMonth() + 1)).slice(-2) + ('0' + d.getUTCDate()).slice(-2);
-    document.getElementById('t-today').textContent = (await getCounter('day-' + ymd)).toLocaleString('it-IT');
+    const today = await getCounter('day-' + ymd);
+    document.getElementById('t-today').textContent = today.toLocaleString('it-IT');
 
-    // Pages
-    const pages = await getCounters('page', KEYS.pages);
-    renderBars('pages-list', pages, { icon: () => '📄', label: k => '/' + (k === 'home' ? '' : k.replace(/-/g, '/')), countEl: 'c-pages' });
-
-    // Devices
+    // Now panel by panel — render as soon as each batch returns
     const devices = await getCounters('device', KEYS.devices);
     renderBars('devices-list', devices, { icon: k => D_ICONS[k] || '❓', label: k => k.charAt(0).toUpperCase() + k.slice(1) });
 
-    // Browsers
     const browsers = await getCounters('browser', KEYS.browsers);
     renderBars('browsers-list', browsers, { icon: k => B_ICONS[k] || '❓', label: k => k.charAt(0).toUpperCase() + k.slice(1) });
 
-    // Languages
+    const pages = await getCounters('page', KEYS.pages);
+    renderBars('pages-list', pages, { icon: () => '📄', label: k => '/' + (k === 'home' ? '' : k.replace(/-/g, '/')), countEl: 'c-pages' });
+
     const langs = await getCounters('lang', KEYS.langs);
     renderBars('langs-list', langs, { icon: () => '🗣', label: k => L_NAMES[k] || k.toUpperCase() });
 
-    // Countries
-    const countries = await getCounters('country', KEYS.countries);
-    const countryActive = Object.values(countries).filter(v => v > 0).length;
-    document.getElementById('t-countries').textContent = countryActive;
-    renderBars('countries-list', countries, { icon: k => flag(k), label: k => C_NAMES[k] || k.toUpperCase(), gold: true, countEl: 'c-countries' });
-
-    // Referrers
     const refs = await getCounters('ref', KEYS.refs);
     renderBars('refs-list', refs, {
       icon: k => k.includes('whatsapp') ? '💬' : k.includes('facebook') ? '📘' : k.includes('instagram') ? '📷' : k.includes('telegram') ? '✈️' : k.includes('google') ? '🔎' : k === 'direct' ? '🔗' : '↗',
@@ -540,11 +567,16 @@
       countEl: 'c-refs'
     });
 
-    // Hour heatmap
+    const countries = await getCounters('country', KEYS.countries);
+    const countryActive = Object.values(countries).filter(v => v > 0).length;
+    document.getElementById('t-countries').textContent = countryActive;
+    renderBars('countries-list', countries, { icon: k => flag(k), label: k => C_NAMES[k] || k.toUpperCase(), gold: true, countEl: 'c-countries' });
+
+    // Hour heatmap (24 keys = last batch)
+    const hourTasks = Array.from({length: 24}, (_, h) => async () => ({ h, v: await getCounter('hour-' + h) }));
+    const hourRes = await pAll(hourTasks, 4);
     const hours = {};
-    await Promise.all(Array.from({length: 24}, async (_, h) => {
-      hours[h] = await getCounter('hour-' + h);
-    }));
+    hourRes.forEach(({h, v}) => hours[h] = v);
     renderHeatmap(hours);
 
     document.getElementById('last-updated').textContent = 'Aggiornato ' + new Date().toLocaleTimeString('it-IT');
