@@ -3,7 +3,7 @@
  * where signal can be weak), network-first for everything else.
  */
 
-const CACHE_VERSION = 'dc-v1-2026-05-22';
+const CACHE_VERSION = 'dc-v2-2026-05-22-analytics';
 const PRECACHE = [
   './',
   'come-votare/',

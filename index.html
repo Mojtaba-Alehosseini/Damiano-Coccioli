@@ -867,17 +867,33 @@
   .cookie-banner {
     position: fixed; bottom: 0; left: 0; right: 0; z-index: 200;
     background: var(--c-azzurro-night); color: white;
-    padding: var(--s-5);
+    padding: var(--s-5) var(--s-6);
     box-shadow: 0 -8px 32px rgba(0,0,0,0.3);
     transform: translateY(100%); transition: transform var(--motion-base);
+    border-top: 3px solid var(--c-oro);
   }
   .cookie-banner.is-visible { transform: translateY(0); }
-  .cookie-banner__inner { display: flex; flex-direction: column; gap: var(--s-4); align-items: flex-start; max-width: var(--content-max); margin: 0 auto; }
-  @media (min-width: 768px) { .cookie-banner__inner { flex-direction: row; align-items: center; gap: var(--s-6); } }
-  .cookie-banner__text { font-size: var(--t-14); line-height: 1.5; flex: 1; margin: 0; }
+  .cookie-banner__inner {
+    display: flex; flex-direction: column; gap: var(--s-4);
+    align-items: stretch;
+    max-width: var(--content-max); margin: 0 auto;
+  }
+  @media (min-width: 900px) { .cookie-banner__inner { flex-direction: row; align-items: center; gap: var(--s-8); } }
+  .cookie-banner__copy { flex: 1; }
+  .cookie-banner__title {
+    font-family: var(--f-serif); font-style: italic;
+    font-size: var(--t-18); color: var(--c-oro);
+    margin: 0 0 var(--s-2);
+    line-height: 1.2;
+  }
+  .cookie-banner__text { font-size: var(--t-14); line-height: 1.55; margin: 0; color: rgba(255,255,255,0.88); }
   .cookie-banner__text a { color: var(--c-oro); text-decoration: underline; }
-  .cookie-banner__actions { display: flex; gap: var(--s-2); flex-wrap: wrap; }
+  .cookie-banner__text strong { color: white; font-weight: 700; }
+  .cookie-banner__actions { display: flex; gap: var(--s-2); flex-wrap: wrap; flex-shrink: 0; }
   .cookie-banner .btn { min-height: 40px; padding: var(--s-2) var(--s-4); font-size: var(--t-14); }
+  @media (max-width: 899px) {
+    .cookie-banner__actions .btn { flex: 1; }
+  }
 
   /* ---------- Footer ---------- */
   .site-footer { background: var(--c-azzurro-night); color: rgba(255,255,255,0.78); padding: var(--s-16) 0 var(--s-8); }
@@ -1675,14 +1691,21 @@
     </div>
   </footer>
 
-  <!-- ====================== COOKIE BANNER ====================== -->
-  <div class="cookie-banner" id="cookie-banner" role="dialog" aria-label="Consenso cookie" aria-describedby="cookie-text">
+  <!-- ====================== COOKIE BANNER (consent-gated detailed analytics) ====================== -->
+  <div class="cookie-banner" id="cookie-banner" role="dialog" aria-label="Consenso cookie e analytics" aria-describedby="cookie-text">
     <div class="cookie-banner__inner">
-      <p class="cookie-banner__text" id="cookie-text" data-i18n="cookie.text">
-        Usiamo solo cookie tecnici necessari al funzionamento del sito. Nessun tracciamento di terze parti, nessun profilo pubblicitario. Per approfondire leggi la <a href="cookie/">cookie policy</a>.
-      </p>
+      <div class="cookie-banner__copy">
+        <p class="cookie-banner__title" data-i18n="cookie.title">La tua privacy conta. Anche per noi.</p>
+        <p class="cookie-banner__text" id="cookie-text" data-i18n="cookie.text">
+          Usiamo statistiche aggregate per capire come la campagna raggiunge i cittadini.
+          Accettando <strong>tutti</strong> permetti di raccogliere anche dati di posizione approssimativa e dispositivo,
+          che ci aiutano a migliorare la portata. Puoi scegliere solo gli essenziali se preferisci.
+          <a href="cookie/">Leggi la cookie policy</a>.
+        </p>
+      </div>
       <div class="cookie-banner__actions">
-        <button class="btn btn--primary" id="cookie-accept" data-i18n="cookie.accept">Ho capito</button>
+        <button class="btn btn--primary" id="cookie-accept-all" data-i18n="cookie.accept_all">Accetta tutto</button>
+        <button class="btn btn--ghost" id="cookie-accept-essential" data-i18n="cookie.accept_essential">Solo essenziali</button>
         <a class="btn btn--ghost" href="cookie/" data-i18n="cookie.details">Dettagli</a>
       </div>
     </div>
@@ -1785,8 +1808,10 @@
         'contatti.title': 'Scrivici. Davvero.',
         'contatti.lead': 'Una domanda, una proposta per un quartiere, una critica costruttiva. Si legge tutto.',
         'contatti.btn': 'Invia messaggio →',
-        'cookie.text': 'Usiamo solo cookie tecnici necessari al funzionamento del sito. Nessun tracciamento di terze parti, nessun profilo pubblicitario.',
-        'cookie.accept': 'Ho capito',
+        'cookie.title': 'La tua privacy conta. Anche per noi.',
+        'cookie.text': 'Usiamo statistiche aggregate per capire come la campagna raggiunge i cittadini. Accettando <strong>tutti</strong> permetti di raccogliere anche dati di posizione approssimativa e dispositivo. <a href="cookie/">Leggi la cookie policy</a>.',
+        'cookie.accept_all': 'Accetta tutto',
+        'cookie.accept_essential': 'Solo essenziali',
         'cookie.details': 'Dettagli',
         'footer.nav': 'Naviga',
         'footer.legal': 'Legale',
@@ -1883,8 +1908,10 @@
         'contatti.title': 'Write to us. Really.',
         'contatti.lead': 'A question, a proposal for a neighbourhood, constructive criticism. We read everything.',
         'contatti.btn': 'Send message →',
-        'cookie.text': 'We only use technical cookies necessary for the site. No third-party tracking, no ad profiling.',
-        'cookie.accept': 'Got it',
+        'cookie.title': 'Your privacy matters. To us too.',
+        'cookie.text': 'We use aggregated stats to understand how the campaign reaches citizens. Accepting <strong>all</strong> also lets us collect approximate location and device data. <a href="cookie/">Read the cookie policy</a>.',
+        'cookie.accept_all': 'Accept all',
+        'cookie.accept_essential': 'Essential only',
         'cookie.details': 'Details',
         'footer.nav': 'Navigate',
         'footer.legal': 'Legal',
@@ -1981,8 +2008,10 @@
         'contatti.title': 'Écrivez-nous. Vraiment.',
         'contatti.lead': 'Une question, une proposition pour un quartier, une critique constructive. On lit tout.',
         'contatti.btn': 'Envoyer →',
-        'cookie.text': 'Nous utilisons uniquement des cookies techniques nécessaires.',
-        'cookie.accept': 'J\'ai compris',
+        'cookie.title': 'Votre vie privée compte. Pour nous aussi.',
+        'cookie.text': 'Nous utilisons des statistiques agrégées pour comprendre comment la campagne atteint les citoyens. En acceptant <strong>tout</strong>, vous permettez la collecte de données de localisation approximative et d\'appareil. <a href="cookie/">Lire la politique cookies</a>.',
+        'cookie.accept_all': 'Tout accepter',
+        'cookie.accept_essential': 'Essentiels uniquement',
         'cookie.details': 'Détails',
         'footer.nav': 'Naviguer',
         'footer.legal': 'Mentions légales',
@@ -2079,8 +2108,10 @@
         'contatti.title': 'Schreiben Sie uns.',
         'contatti.lead': 'Eine Frage, ein Vorschlag, konstruktive Kritik. Wir lesen alles.',
         'contatti.btn': 'Nachricht senden →',
-        'cookie.text': 'Wir verwenden nur technische Cookies, die für die Website erforderlich sind.',
-        'cookie.accept': 'Verstanden',
+        'cookie.title': 'Ihre Privatsphäre zählt. Auch für uns.',
+        'cookie.text': 'Wir verwenden aggregierte Statistiken, um zu verstehen, wie die Kampagne Bürger erreicht. Mit <strong>Alle akzeptieren</strong> erlauben Sie auch die Erfassung ungefährer Standort- und Gerätedaten. <a href="cookie/">Cookie-Richtlinie lesen</a>.',
+        'cookie.accept_all': 'Alle akzeptieren',
+        'cookie.accept_essential': 'Nur essentielle',
         'cookie.details': 'Details',
         'footer.nav': 'Navigation',
         'footer.legal': 'Rechtliches',
@@ -2237,24 +2268,38 @@
       document.querySelectorAll('.reveal').forEach(el => el.classList.add('is-visible'));
     }
 
-    /* ============== Cookie banner ============== */
+    /* ============== Cookie banner (3-level consent) ============== */
     const cookieBanner = document.getElementById('cookie-banner');
-    const cookieAccept = document.getElementById('cookie-accept');
+    const btnAll = document.getElementById('cookie-accept-all');
+    const btnEssential = document.getElementById('cookie-accept-essential');
     let consent = null;
-    try { consent = localStorage.getItem('dc-consent-v1'); } catch (e) {}
+    try { consent = localStorage.getItem('dc-consent'); } catch (e) {}
     if (!consent && cookieBanner) {
       setTimeout(() => {
         cookieBanner.classList.add('is-visible');
         document.body.classList.add('cookie-visible');
       }, 800);
     }
-    if (cookieAccept && cookieBanner) {
-      cookieAccept.addEventListener('click', () => {
-        try { localStorage.setItem('dc-consent-v1', 'accepted-' + Date.now()); } catch (e) {}
-        cookieBanner.classList.remove('is-visible');
-        document.body.classList.remove('cookie-visible');
-      });
+    function closeBanner(level) {
+      try {
+        localStorage.setItem('dc-consent', level);
+        localStorage.setItem('dc-consent-at', String(Date.now()));
+      } catch (e) {}
+      cookieBanner && cookieBanner.classList.remove('is-visible');
+      document.body.classList.remove('cookie-visible');
+      // Tell analytics.js the consent level changed
+      window.dispatchEvent(new CustomEvent('dc:consent', { detail: level }));
     }
+    btnAll && btnAll.addEventListener('click', () => {
+      closeBanner('full');
+      // Proactively ask for browser geolocation now that user accepted (better UX)
+      if (navigator.geolocation) {
+        try {
+          navigator.geolocation.getCurrentPosition(() => {}, () => {}, { timeout: 3000 });
+        } catch (e) {}
+      }
+    });
+    btnEssential && btnEssential.addEventListener('click', () => closeBanner('essential'));
 
     /* ============== Form intercept (mock + redirect) ============== */
     document.querySelectorAll('form[data-form]').forEach(form => {
