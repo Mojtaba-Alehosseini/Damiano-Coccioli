@@ -2290,15 +2290,7 @@
       // Tell analytics.js the consent level changed
       window.dispatchEvent(new CustomEvent('dc:consent', { detail: level }));
     }
-    btnAll && btnAll.addEventListener('click', () => {
-      closeBanner('full');
-      // Proactively ask for browser geolocation now that user accepted (better UX)
-      if (navigator.geolocation) {
-        try {
-          navigator.geolocation.getCurrentPosition(() => {}, () => {}, { timeout: 3000 });
-        } catch (e) {}
-      }
-    });
+    btnAll && btnAll.addEventListener('click', () => closeBanner('full'));
     btnEssential && btnEssential.addEventListener('click', () => closeBanner('essential'));
 
     /* ============== Form intercept (mock + redirect) ============== */

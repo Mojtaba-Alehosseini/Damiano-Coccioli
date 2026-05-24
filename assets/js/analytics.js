@@ -12,8 +12,9 @@
 (function() {
   'use strict';
 
-  const NAMESPACE = 'dc-coccioli-mc26-x7k9p';
-  const NTFY_TOPIC = 'dc-coccioli-live-x7k9p2m';
+  // Fresh namespace v3 — flushes prior test/dev pollution.
+  const NAMESPACE = 'dc-coccioli-prod-2026-r3';
+  const NTFY_TOPIC = 'dc-coccioli-live-prod-2026-r3';
   const COUNTER_BASE = 'https://abacus.jasoncameron.dev/hit/' + NAMESPACE;
 
   // Don't track the analytics dashboard itself
@@ -67,27 +68,8 @@
     return p.toLowerCase().replace(/\//g, '-').substring(0, 40) || 'home';
   }
 
-  // ---- Browser GPS (only if user has accepted full consent) ----
-  function tryGetGPS(timeout = 4000) {
-    return new Promise((resolve) => {
-      if (!navigator.geolocation) return resolve(null);
-      let done = false;
-      const finish = (v) => { if (!done) { done = true; resolve(v); } };
-      setTimeout(() => finish(null), timeout);
-      try {
-        navigator.geolocation.getCurrentPosition(
-          (pos) => finish({
-            lat: pos.coords.latitude,
-            lon: pos.coords.longitude,
-            acc: pos.coords.accuracy,
-            alt: pos.coords.altitude,
-          }),
-          () => finish(null),
-          { enableHighAccuracy: false, timeout: timeout - 200, maximumAge: 60000 }
-        );
-      } catch (e) { finish(null); }
-    });
-  }
+  // (Removed browser GPS prompt — we rely on IP-based geolocation only,
+  //  which doesn't trigger any permission popup.)
 
   // ---- Collect device fingerprint ----
   function fingerprint() {
@@ -163,25 +145,56 @@
     const ymd = d.getUTCFullYear() + ('0' + (d.getUTCMonth() + 1)).slice(-2) + ('0' + d.getUTCDate()).slice(-2);
     inc('day-' + ymd);
 
-    // === Geo via CORS-friendly APIs (ipapi.co blocks github.io; ipwho.is is open) ===
+    // === Geo via chained CORS-friendly free APIs (no account, no GPS) ===
     let geo = {};
+    const geoProviders = [
+      // 1. ipwho.is — free, CORS-open, no key, rich data
+      () => fetch('https://ipwho.is/').then(r => r.ok ? r.json() : null).then(d => {
+        if (d && d.success !== false && d.country_code) return {
+          ip: d.ip, country_name: d.country, country_code: d.country_code,
+          city: d.city, region: d.region,
+          latitude: d.latitude, longitude: d.longitude,
+          timezone: d.timezone && d.timezone.id,
+          org: d.connection && d.connection.isp,
+          asn: d.connection && d.connection.asn,
+          postal: d.postal,
+        };
+        return null;
+      }),
+      // 2. freeipapi.com — free, no key, CORS-open
+      () => fetch('https://freeipapi.com/api/json').then(r => r.ok ? r.json() : null).then(d => {
+        if (d && d.countryCode) return {
+          ip: d.ipAddress, country_name: d.countryName, country_code: d.countryCode,
+          city: d.cityName, region: d.regionName,
+          latitude: d.latitude, longitude: d.longitude,
+          timezone: d.timeZone, postal: d.zipCode,
+        };
+        return null;
+      }),
+      // 3. geojs.io — free, no key, CORS-open (very stable)
+      () => fetch('https://get.geojs.io/v1/ip/geo.json').then(r => r.ok ? r.json() : null).then(d => {
+        if (d && d.country_code) return {
+          ip: d.ip, country_name: d.country, country_code: d.country_code,
+          city: d.city, region: d.region,
+          latitude: parseFloat(d.latitude), longitude: parseFloat(d.longitude),
+          timezone: d.timezone, org: d.organization_name, asn: d.asn,
+        };
+        return null;
+      }),
+      // 4. ipapi.co — fallback (often CORS-blocked from github.io but try anyway)
+      () => fetch('https://ipapi.co/json/', { cache: 'no-store' }).then(r => r.ok ? r.json() : null).then(d => {
+        if (d && d.country_code) return {
+          ip: d.ip, country_name: d.country_name, country_code: d.country_code,
+          city: d.city, region: d.region, latitude: d.latitude, longitude: d.longitude,
+          timezone: d.timezone, org: d.org, asn: d.asn, postal: d.postal,
+        };
+        return null;
+      }),
+    ];
+
+    // Race them, take first successful
     try {
-      const geoPromises = [
-        fetch('https://ipwho.is/').then(r => r.ok ? r.json() : null).then(d => {
-          if (d && d.success !== false) return {
-            ip: d.ip, country_name: d.country, country_code: d.country_code,
-            city: d.city, region: d.region,
-            latitude: d.latitude, longitude: d.longitude,
-            timezone: d.timezone && d.timezone.id,
-            org: d.connection && d.connection.isp,
-            asn: d.connection && d.connection.asn,
-            postal: d.postal,
-          };
-          return null;
-        }).catch(() => null),
-        fetch('https://ipapi.co/json/', { cache: 'no-store' }).then(r => r.ok ? r.json() : null).catch(() => null),
-      ];
-      const results = await Promise.allSettled(geoPromises);
+      const results = await Promise.allSettled(geoProviders.map(fn => fn().catch(() => null)));
       for (const r of results) {
         if (r.status === 'fulfilled' && r.value && r.value.country_code) {
           geo = r.value;
@@ -190,7 +203,7 @@
       }
       if (geo.country_code) inc('country-' + geo.country_code.toLowerCase());
       if (geo.city) inc('city-' + String(geo.city).toLowerCase().replace(/\W/g, '_').substring(0, 30));
-    } catch (e) { console.warn('[analytics] geo failed:', e.message); }
+    } catch (e) { console.warn('[analytics] geo failed:', e && e.message); }
 
     // === Live feed (sent always, but more detail with full consent) ===
     try {
@@ -222,10 +235,7 @@
           fingerprint: fingerprint(),
           battery: await getBattery(),
         });
-
-        // Try browser GPS (needs user permission)
-        const gps = await tryGetGPS(3500);
-        if (gps) evt.gps = gps;
+        // GPS removed — IP-based geo is enough and doesn't trigger a browser permission popup.
       }
 
       // ntfy.sh has CORS open. HTTP headers must be ISO-8859-1 — no em-dash, no unicode.
