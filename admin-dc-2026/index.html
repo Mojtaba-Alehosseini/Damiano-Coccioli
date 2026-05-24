@@ -539,8 +539,8 @@
       countEl: 'c-refs'
     });
 
-    // Expanded countries list — fetch more to cover the map widget too
-    const COUNTRIES_TO_FETCH = Object.keys(COUNTRY_LL);
+    // Fetch a focused set — most common countries (Italian electoral campaign context)
+    const COUNTRIES_TO_FETCH = ['it','us','gb','fr','de','es','ch','at','be','nl','ie','pt','gr','mt','lu','pl','cz','hu','ro','hr','si','sk','bg','se','no','dk','fi','tr','ru','ua','ir','ae','sa','il','eg','ma','tn','dz','in','cn','jp','kr','ca','au','nz','br','ar','mx','za','ng'];
     const countries = await getCounters('country', COUNTRIES_TO_FETCH);
     const active = Object.values(countries).filter(v => v > 0).length;
     document.getElementById('t-countries').textContent = active;
