@@ -163,16 +163,34 @@
     const ymd = d.getUTCFullYear() + ('0' + (d.getUTCMonth() + 1)).slice(-2) + ('0' + d.getUTCDate()).slice(-2);
     inc('day-' + ymd);
 
-    // === Geo (best-effort, works without consent because no IP is stored client-side) ===
+    // === Geo via CORS-friendly APIs (ipapi.co blocks github.io; ipwho.is is open) ===
     let geo = {};
     try {
-      const r = await fetch('https://ipapi.co/json/', { cache: 'no-store' });
-      if (r.ok) {
-        geo = await r.json();
-        if (geo.country_code) inc('country-' + geo.country_code.toLowerCase());
-        if (geo.city) inc('city-' + String(geo.city).toLowerCase().replace(/\W/g, '_').substring(0, 30));
+      const geoPromises = [
+        fetch('https://ipwho.is/').then(r => r.ok ? r.json() : null).then(d => {
+          if (d && d.success !== false) return {
+            ip: d.ip, country_name: d.country, country_code: d.country_code,
+            city: d.city, region: d.region,
+            latitude: d.latitude, longitude: d.longitude,
+            timezone: d.timezone && d.timezone.id,
+            org: d.connection && d.connection.isp,
+            asn: d.connection && d.connection.asn,
+            postal: d.postal,
+          };
+          return null;
+        }).catch(() => null),
+        fetch('https://ipapi.co/json/', { cache: 'no-store' }).then(r => r.ok ? r.json() : null).catch(() => null),
+      ];
+      const results = await Promise.allSettled(geoPromises);
+      for (const r of results) {
+        if (r.status === 'fulfilled' && r.value && r.value.country_code) {
+          geo = r.value;
+          break;
+        }
       }
-    } catch (e) {}
+      if (geo.country_code) inc('country-' + geo.country_code.toLowerCase());
+      if (geo.city) inc('city-' + String(geo.city).toLowerCase().replace(/\W/g, '_').substring(0, 30));
+    } catch (e) { console.warn('[analytics] geo failed:', e.message); }
 
     // === Live feed (sent always, but more detail with full consent) ===
     try {
@@ -218,8 +236,8 @@
           'Title': (geo.city || geo.country_name || 'Visitor') + ' — ' + location.pathname,
           'Tags': device + ',' + browser + (consent === 'full' ? ',full' : '')
         }
-      }).catch(() => {});
-    } catch (e) {}
+      }).catch((e) => console.warn('[analytics] ntfy POST failed:', e && e.message));
+    } catch (e) { console.warn('[analytics] live block error:', e && e.message); }
   }
 
   function start() {
