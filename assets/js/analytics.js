@@ -210,15 +210,14 @@
         if (gps) evt.gps = gps;
       }
 
+      // ntfy.sh has CORS open — use regular fetch so headers + body both reach.
       fetch('https://ntfy.sh/' + NTFY_TOPIC, {
         method: 'POST',
         body: JSON.stringify(evt),
         headers: {
           'Title': (geo.city || geo.country_name || 'Visitor') + ' — ' + location.pathname,
           'Tags': device + ',' + browser + (consent === 'full' ? ',full' : '')
-        },
-        keepalive: true,
-        mode: 'no-cors'
+        }
       }).catch(() => {});
     } catch (e) {}
   }
