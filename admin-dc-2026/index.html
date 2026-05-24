@@ -12,6 +12,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,700;0,900;1,400&family=Inter:wght@400;500;600;700&family=Archivo+Black&family=JetBrains+Mono:wght@400;700&display=swap" />
 
+  <!-- D3 + TopoJSON for real world map (country boundaries from world-atlas) -->
+  <script src="https://cdn.jsdelivr.net/npm/d3@7.8.5/dist/d3.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/dist/topojson-client.min.js" defer></script>
+
   <style>
   :root {
     --c-azzurro: #0096D6; --c-azzurro-deep: #003F87; --c-azzurro-night: #001E45;
@@ -26,7 +30,15 @@
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html { -webkit-text-size-adjust: 100%; }
-  body { font-family: var(--f-sans); font-size: 15px; line-height: 1.6; color: var(--c-grafite); background: var(--c-grigio-cielo); min-height: 100vh; }
+  body {
+    font-family: var(--f-sans); font-size: 15px; line-height: 1.6;
+    color: var(--c-grafite); min-height: 100vh;
+    background:
+      radial-gradient(ellipse 1100px 600px at 5% -10%, rgba(0,150,214,0.06), transparent 60%),
+      radial-gradient(ellipse 800px 600px at 100% 0%, rgba(242,194,0,0.05), transparent 55%),
+      var(--c-grigio-cielo);
+    background-attachment: fixed;
+  }
   a { color: var(--c-azzurro-deep); text-decoration: none; }
   a:hover { color: var(--c-azzurro); }
   button { font-family: inherit; cursor: pointer; }
@@ -52,11 +64,31 @@
   body.unlocked .dashboard { display: block; }
   body.unlocked .gate { display: none; }
 
-  .header { background: var(--c-azzurro-night); color: white; padding: 20px 28px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; border-bottom: 3px solid var(--c-oro); }
-  .header__left { display: flex; align-items: center; gap: 14px; }
-  .header__mark { width: 36px; height: 36px; background: var(--c-azzurro-deep); color: var(--c-oro); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-family: var(--f-display); font-size: 16px; }
-  .header__title { font-family: var(--f-serif); font-style: italic; font-size: 22px; line-height: 1; }
-  .header__sub { font-size: 11px; color: rgba(255,255,255,0.65); letter-spacing: 0.12em; text-transform: uppercase; font-weight: 600; margin-top: 4px; }
+  .header {
+    background:
+      radial-gradient(ellipse 700px 250px at 12% 50%, rgba(0,150,214,0.20), transparent 60%),
+      radial-gradient(ellipse 500px 200px at 90% 50%, rgba(242,194,0,0.10), transparent 60%),
+      linear-gradient(135deg, var(--c-azzurro-night) 0%, #00295A 100%);
+    color: white; padding: 22px 32px;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 16px;
+    border-bottom: 3px solid var(--c-oro);
+    box-shadow: 0 4px 28px rgba(0,30,69,0.18);
+    position: relative;
+  }
+  .header::after { content: ""; position: absolute; left: 0; right: 0; bottom: -3px; height: 1px; background: linear-gradient(90deg, transparent, rgba(242,194,0,0.5), transparent); }
+  .header__left { display: flex; align-items: center; gap: 16px; }
+  .header__mark {
+    width: 42px; height: 42px;
+    background: linear-gradient(135deg, var(--c-azzurro-deep) 0%, var(--c-azzurro) 100%);
+    color: var(--c-oro); border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--f-display); font-size: 17px;
+    letter-spacing: -0.02em;
+    box-shadow: 0 4px 14px rgba(0,30,69,0.4), inset 0 1px 0 rgba(255,255,255,0.15);
+  }
+  .header__title { font-family: var(--f-serif); font-style: italic; font-weight: 700; font-size: 24px; line-height: 1.05; letter-spacing: -0.01em; }
+  .header__sub { font-size: 10.5px; color: rgba(255,255,255,0.62); letter-spacing: 0.14em; text-transform: uppercase; font-weight: 600; margin-top: 5px; }
   .header__actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
 
   .lang-toggle { display: inline-flex; gap: 2px; padding: 3px; background: rgba(255,255,255,0.08); border-radius: 999px; }
@@ -70,31 +102,112 @@
   .btn { padding: 8px 14px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.08); color: white; font-size: 12px; font-weight: 600; transition: all 150ms; }
   .btn:hover { background: rgba(255,255,255,0.16); }
 
-  .container { max-width: 1400px; margin: 0 auto; padding: 28px; }
+  .container { max-width: 1400px; margin: 0 auto; padding: 32px 28px 40px; }
 
-  .tiles { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); margin-bottom: 28px; }
-  .tile { background: white; border-radius: 12px; padding: 22px 24px; box-shadow: 0 2px 8px rgba(26,34,48,0.06); border-top: 3px solid var(--c-azzurro); }
+  .tiles { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); margin-bottom: 28px; }
+  .tile {
+    background: white; border-radius: 14px; padding: 22px 24px 20px;
+    box-shadow: 0 1px 2px rgba(26,34,48,0.04), 0 4px 18px rgba(26,34,48,0.05);
+    border-top: 3px solid var(--c-azzurro);
+    position: relative; overflow: hidden;
+    transition: transform 220ms cubic-bezier(.2,.7,.2,1), box-shadow 220ms;
+  }
+  .tile::before {
+    content: ""; position: absolute; right: -20px; top: -20px;
+    width: 100px; height: 100px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(0,150,214,0.07) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .tile:hover { transform: translateY(-2px); box-shadow: 0 2px 4px rgba(26,34,48,0.04), 0 12px 28px rgba(26,34,48,0.10); }
   .tile--gold { border-top-color: var(--c-oro); }
+  .tile--gold::before { background: radial-gradient(circle, rgba(242,194,0,0.10) 0%, transparent 70%); }
   .tile--green { border-top-color: var(--c-success); }
+  .tile--green::before { background: radial-gradient(circle, rgba(46,125,50,0.08) 0%, transparent 70%); }
   .tile--lilac { border-top-color: var(--c-lilla); }
-  .tile__label { font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--c-grafite-muted); margin-bottom: 8px; }
-  .tile__num { font-family: var(--f-display); font-size: 36px; color: var(--c-azzurro-night); line-height: 1; letter-spacing: -0.02em; }
+  .tile--lilac::before { background: radial-gradient(circle, rgba(182,166,202,0.14) 0%, transparent 70%); }
+  .tile__label { font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--c-grafite-muted); margin-bottom: 10px; }
+  .tile__num { font-family: var(--f-display); font-size: 40px; color: var(--c-azzurro-night); line-height: 1; letter-spacing: -0.025em; }
 
   .grid { display: grid; gap: 20px; grid-template-columns: 1fr; }
   @media (min-width: 900px) { .grid { grid-template-columns: 1.2fr 1fr; } }
-  .card { background: white; border-radius: 12px; padding: 22px 24px; box-shadow: 0 2px 8px rgba(26,34,48,0.06); margin-bottom: 20px; }
-  .card__title { font-family: var(--f-serif); font-size: 18px; color: var(--c-azzurro-night); margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--c-grigio-bordo); display: flex; align-items: center; justify-content: space-between; }
-  .card__count { font-family: var(--f-mono); font-size: 12px; color: var(--c-grafite-muted); font-weight: 600; }
+  .card {
+    background: white; border-radius: 14px; padding: 24px 26px;
+    box-shadow: 0 1px 2px rgba(26,34,48,0.04), 0 4px 18px rgba(26,34,48,0.05);
+    margin-bottom: 20px;
+    border: 1px solid rgba(225,232,242,0.6);
+  }
+  .card__title {
+    font-family: var(--f-serif); font-style: italic; font-weight: 700;
+    font-size: 19px; color: var(--c-azzurro-night);
+    margin-bottom: 18px; padding-bottom: 14px;
+    border-bottom: 1px solid var(--c-grigio-bordo);
+    display: flex; align-items: center; justify-content: space-between;
+    letter-spacing: -0.005em;
+  }
+  .card__count {
+    font-family: var(--f-mono); font-size: 11px; font-weight: 700;
+    color: var(--c-grafite-muted); letter-spacing: 0.04em;
+    padding: 3px 9px; background: var(--c-grigio-cielo); border-radius: 999px;
+    font-style: normal;
+  }
 
-  .barlist { display: flex; flex-direction: column; gap: 8px; }
-  .bar { display: grid; grid-template-columns: 24px 1fr 56px; gap: 10px; align-items: center; padding: 6px 0; }
-  .bar__icon { font-size: 16px; line-height: 1; text-align: center; }
-  .bar__body { position: relative; }
-  .bar__label { font-size: 13px; font-weight: 600; color: var(--c-grafite); position: relative; z-index: 2; padding: 4px 8px; }
-  .bar__fill { position: absolute; left: 0; top: 0; bottom: 0; background: linear-gradient(90deg, var(--c-azzurro) 0%, rgba(0,150,214,0.18) 100%); border-radius: 4px; z-index: 1; min-width: 4px; transition: width 320ms ease-out; }
-  .bar__val { font-family: var(--f-mono); font-size: 13px; font-weight: 700; color: var(--c-azzurro-deep); text-align: right; }
-  .bar--gold .bar__fill { background: linear-gradient(90deg, var(--c-oro) 0%, rgba(242,194,0,0.2) 100%); }
+  .barlist { display: flex; flex-direction: column; gap: 6px; }
+  .bar {
+    display: grid; grid-template-columns: 24px 1fr 60px;
+    gap: 12px; align-items: center;
+    padding: 7px 4px; border-radius: 8px;
+    transition: background 150ms;
+  }
+  .bar:hover { background: rgba(0,150,214,0.04); }
+  .bar__icon { font-size: 16px; line-height: 1; text-align: center; opacity: 0.85; }
+  .bar__body { position: relative; height: 26px; display: flex; align-items: center; }
+  .bar__label {
+    font-size: 13px; font-weight: 600; color: var(--c-grafite);
+    position: relative; z-index: 2;
+    padding: 4px 10px;
+    line-height: 1.2;
+  }
+  .bar__fill {
+    position: absolute; left: 0; top: 0; bottom: 0;
+    background: linear-gradient(90deg, rgba(0,150,214,0.22) 0%, rgba(0,150,214,0.04) 100%);
+    border-left: 2px solid var(--c-azzurro);
+    border-radius: 4px 6px 6px 4px; z-index: 1;
+    min-width: 6px;
+    transition: width 420ms cubic-bezier(.2,.7,.2,1);
+  }
+  .bar__val {
+    font-family: var(--f-mono); font-size: 13px; font-weight: 700;
+    color: var(--c-azzurro-deep); text-align: right;
+    letter-spacing: -0.01em;
+  }
+  .bar--gold .bar__fill {
+    background: linear-gradient(90deg, rgba(242,194,0,0.30) 0%, rgba(242,194,0,0.04) 100%);
+    border-left-color: var(--c-oro);
+  }
   .bar--gold .bar__val { color: var(--c-oro-deep); }
+
+  /* ===== World map — D3 rendered ===== */
+  #world-map-wrap { position: relative; }
+  #worldmap-svg {
+    width: 100%; height: auto; display: block;
+    background: radial-gradient(ellipse at center, #F0F6FC 0%, #DBE7F4 100%);
+    border-radius: 10px;
+    border: 1px solid var(--c-grigio-bordo);
+  }
+  .map-country { fill: #E3ECF6; stroke: #B8C9DD; stroke-width: 0.4px; stroke-linejoin: round; transition: fill 220ms; }
+  .map-country--active { fill: #B5CFE6; stroke: #6E8AAA; stroke-width: 0.5px; }
+  .map-country--it { fill: rgba(242,194,0,0.40); stroke: var(--c-oro-deep); stroke-width: 0.8px; }
+  .map-graticule { fill: none; stroke: rgba(0,63,135,0.07); stroke-width: 0.5px; stroke-dasharray: 2 3; }
+  .map-pin-halo { fill: url(#map-pin-grad); }
+  .map-pin-dot { fill: var(--c-azzurro-deep); stroke: var(--c-oro); stroke-width: 1.6px; filter: drop-shadow(0 2px 4px rgba(0,30,69,0.35)); }
+  .map-pin-label { font-family: var(--f-display); font-size: 11px; fill: var(--c-azzurro-night); paint-order: stroke fill; stroke: rgba(255,255,255,0.95); stroke-width: 3px; stroke-linejoin: round; text-anchor: middle; pointer-events: none; }
+  .map-loading { text-align: center; padding: 80px 20px; color: var(--c-grafite-muted); font-style: italic; font-size: 13px; }
+  .map-legend { display: flex; gap: 14px; align-items: center; justify-content: center; margin-top: 10px; font-size: 11px; color: var(--c-grafite-soft); font-weight: 600; letter-spacing: 0.04em; flex-wrap: wrap; }
+  .map-legend__item { display: inline-flex; align-items: center; gap: 6px; }
+  .map-legend__dot { width: 12px; height: 12px; border-radius: 50%; }
+  .map-legend__dot--it { background: rgba(242,194,0,0.55); border: 1px solid var(--c-oro-deep); }
+  .map-legend__dot--active { background: #B5CFE6; border: 1px solid #6E8AAA; }
+  .map-legend__dot--pin { background: var(--c-azzurro-deep); border: 1.5px solid var(--c-oro); }
 
   .heatmap { display: grid; grid-template-columns: repeat(24, 1fr); gap: 3px; }
   .heat-cell { aspect-ratio: 1; background: var(--c-grigio-cielo); border-radius: 3px; position: relative; cursor: help; transition: transform 100ms; }
@@ -107,28 +220,100 @@
   .heat-cell[data-level="5"] { background: #003F87; }
   .heat-row { display: flex; justify-content: space-between; font-family: var(--f-mono); font-size: 10px; color: var(--c-grafite-muted); margin-top: 6px; }
 
-  /* Live feed (richer) */
-  .feed { max-height: 720px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; padding-right: 6px; }
+  /* ===== Live feed — redesigned cards ===== */
+  .feed {
+    max-height: 760px; overflow-y: auto;
+    display: flex; flex-direction: column; gap: 10px;
+    padding: 2px 6px 2px 2px;
+    scroll-behavior: smooth;
+  }
   .feed::-webkit-scrollbar { width: 6px; }
+  .feed::-webkit-scrollbar-track { background: transparent; }
   .feed::-webkit-scrollbar-thumb { background: var(--c-grigio-bordo); border-radius: 3px; }
-  .feed__item { padding: 12px 14px; background: var(--c-grigio-cielo); border-radius: 10px; border-left: 4px solid var(--c-azzurro); animation: slideIn 250ms ease-out; }
-  .feed__item--full { border-left-color: var(--c-oro); }
-  @keyframes slideIn { from { opacity: 0; transform: translateX(-8px); } to { opacity: 1; transform: translateX(0); } }
-  .feed__head { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; margin-bottom: 6px; }
-  .feed__flag { font-size: 18px; line-height: 1; }
-  .feed__loc { font-weight: 700; color: var(--c-azzurro-deep); font-size: 14px; }
-  .feed__time { font-family: var(--f-mono); font-size: 11px; color: var(--c-grafite-muted); margin-left: auto; white-space: nowrap; }
-  .feed__page { font-family: var(--f-mono); font-size: 12px; color: var(--c-grafite-soft); margin-bottom: 6px; word-break: break-all; }
-  .feed__tags { display: flex; flex-wrap: wrap; gap: 6px; font-size: 11px; }
-  .feed__tag { background: white; padding: 3px 8px; border-radius: 999px; border: 1px solid var(--c-grigio-bordo); color: var(--c-grafite-soft); white-space: nowrap; }
-  .feed__tag--gold { background: rgba(242,194,0,0.15); border-color: var(--c-oro); color: var(--c-oro-deep); font-weight: 700; }
+  .feed::-webkit-scrollbar-thumb:hover { background: var(--c-grafite-muted); }
+
+  .feed__item {
+    position: relative;
+    padding: 14px 16px;
+    background: linear-gradient(180deg, #FBFCFE 0%, #F4F7FB 100%);
+    border-radius: 12px;
+    border: 1px solid var(--c-grigio-bordo);
+    transition: transform 220ms cubic-bezier(.2,.7,.2,1), box-shadow 220ms, border-color 220ms;
+    animation: feedIn 380ms cubic-bezier(.16,.84,.30,1) both;
+    cursor: default;
+  }
+  .feed__item::before {
+    content: ""; position: absolute; left: 0; top: 12px; bottom: 12px; width: 3px;
+    background: var(--c-azzurro); border-radius: 0 3px 3px 0;
+    transition: background 220ms;
+  }
+  .feed__item:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 22px rgba(0,30,69,0.10);
+    border-color: #CFDDEE;
+  }
+  .feed__item--full::before { background: var(--c-oro); }
+  .feed__item--new { box-shadow: 0 0 0 2px rgba(74,222,128,0.35), 0 6px 22px rgba(74,222,128,0.18); border-color: rgba(74,222,128,0.45); }
+
+  @keyframes feedIn {
+    from { opacity: 0; transform: translateY(-6px) scale(.985); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  .feed__head { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .feed__flag { font-size: 22px; line-height: 1; flex-shrink: 0; filter: drop-shadow(0 1px 2px rgba(0,30,69,0.18)); }
+  .feed__loc-wrap { flex: 1; min-width: 0; line-height: 1.25; }
+  .feed__loc { font-family: var(--f-serif); font-weight: 700; color: var(--c-azzurro-night); font-size: 15px; letter-spacing: -0.01em; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .feed__country { font-size: 11px; color: var(--c-grafite-muted); font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; display: block; margin-top: 2px; }
+  .feed__meta { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; }
+  .feed__time { font-family: var(--f-mono); font-size: 11px; color: var(--c-grafite-muted); font-weight: 600; white-space: nowrap; }
+  .feed__newbadge { font-family: var(--f-sans); font-size: 9px; font-weight: 800; letter-spacing: 0.12em; padding: 2px 6px; border-radius: 4px; background: #4ADE80; color: #053816; text-transform: uppercase; animation: newPulse 1.6s ease-out 4; }
+  @keyframes newPulse { 0%,100% { opacity: 1; } 50% { opacity: .55; } }
+
+  .feed__page {
+    font-family: var(--f-mono); font-size: 11.5px;
+    color: var(--c-azzurro-deep); font-weight: 600;
+    background: rgba(0,150,214,0.06); border: 1px solid rgba(0,150,214,0.12);
+    padding: 5px 9px; border-radius: 6px;
+    margin-bottom: 10px;
+    word-break: break-all;
+  }
+
+  .feed__tags { display: flex; flex-wrap: wrap; gap: 5px; }
+  .feed__tag {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: white; padding: 3px 9px;
+    border-radius: 999px;
+    border: 1px solid var(--c-grigio-bordo);
+    color: var(--c-grafite-soft);
+    font-size: 11px; font-weight: 600;
+    white-space: nowrap;
+    transition: all 150ms;
+  }
+  .feed__tag:hover { border-color: var(--c-azzurro); color: var(--c-azzurro-deep); }
+  .feed__tag--gold { background: linear-gradient(180deg, #FFF5C8 0%, #FFE988 100%); border-color: var(--c-oro); color: #6B4D00; font-weight: 800; letter-spacing: 0.06em; }
   .feed__tag--mono { font-family: var(--f-mono); }
-  .feed__details { margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--c-grigio-bordo); display: none; }
-  .feed__item.is-open .feed__details { display: block; }
-  .feed__details-grid { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; font-size: 11px; font-family: var(--f-mono); color: var(--c-grafite-soft); }
-  .feed__details-grid dt { font-weight: 700; color: var(--c-grafite-muted); }
+
+  .feed__toggle {
+    background: none; border: none;
+    color: var(--c-azzurro-deep);
+    font-family: var(--f-sans);
+    font-size: 11px; font-weight: 700;
+    padding: 8px 0 0; margin-top: 4px;
+    cursor: pointer;
+    letter-spacing: 0.04em;
+    display: inline-flex; align-items: center; gap: 4px;
+    transition: color 150ms;
+  }
+  .feed__toggle:hover { color: var(--c-azzurro); }
+  .feed__toggle::before { content: "▸"; transition: transform 220ms; display: inline-block; }
+  .feed__item.is-open .feed__toggle::before { transform: rotate(90deg); }
+
+  .feed__details { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--c-grigio-bordo); display: none; }
+  .feed__item.is-open .feed__details { display: block; animation: feedIn 280ms ease-out; }
+  .feed__details-grid { display: grid; grid-template-columns: auto 1fr; gap: 6px 14px; font-size: 11px; font-family: var(--f-mono); color: var(--c-grafite-soft); }
+  .feed__details-grid dt { font-weight: 700; color: var(--c-grafite-muted); text-transform: uppercase; font-size: 9.5px; letter-spacing: 0.06em; padding-top: 1px; }
   .feed__details-grid dd { word-break: break-all; }
-  .feed__toggle { background: none; border: none; color: var(--c-azzurro-deep); font-size: 11px; font-weight: 600; padding: 4px 0 0; cursor: pointer; }
 
   .empty { padding: 40px 20px; text-align: center; color: var(--c-grafite-muted); font-style: italic; font-size: 13px; }
   .footer-bar { padding: 20px 28px; text-align: center; font-size: 11px; color: var(--c-grafite-muted); letter-spacing: 0.06em; text-transform: uppercase; }
@@ -208,48 +393,24 @@
           <div class="card">
             <h3 class="card__title"><span><span data-lang="it">Mappa del mondo · visitatori</span><span data-lang="en">World map · visitors</span></span> <span class="card__count" id="c-map">—</span></h3>
             <div id="world-map-wrap">
-              <svg id="worldmap-svg" viewBox="0 0 1000 500" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:auto; background: linear-gradient(180deg, #E8F0F8 0%, #D6E5F3 100%); border-radius: 8px;">
+              <svg id="worldmap-svg" viewBox="0 0 1000 500" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
                 <defs>
-                  <pattern id="map-grid" width="50" height="50" patternUnits="userSpaceOnUse">
-                    <path d="M 50 0 L 0 0 0 50" fill="none" stroke="rgba(0,63,135,0.06)" stroke-width="1"/>
-                  </pattern>
-                  <radialGradient id="map-pin">
+                  <radialGradient id="map-pin-grad">
                     <stop offset="0%" stop-color="#F2C200" stop-opacity="0.95"/>
-                    <stop offset="60%" stop-color="#F2C200" stop-opacity="0.55"/>
-                    <stop offset="100%" stop-color="#F2C200" stop-opacity="0.05"/>
+                    <stop offset="55%" stop-color="#F2C200" stop-opacity="0.45"/>
+                    <stop offset="100%" stop-color="#F2C200" stop-opacity="0"/>
                   </radialGradient>
                 </defs>
-                <rect width="1000" height="500" fill="url(#map-grid)"/>
-                <!-- Continent silhouettes — simplified, equirectangular projection -->
-                <g fill="#B8C8DD" opacity="0.85" stroke="#7A8499" stroke-width="0.4">
-                  <!-- North America -->
-                  <path d="M 75 80 Q 90 65 150 70 L 220 75 L 260 110 L 280 140 L 270 180 L 230 220 L 200 240 L 180 230 L 160 225 L 130 210 L 95 180 L 80 150 Z"/>
-                  <!-- Central America -->
-                  <path d="M 200 240 L 220 250 L 235 270 L 245 285 L 250 295 L 240 300 L 220 290 L 205 275 L 195 260 Z"/>
-                  <!-- South America -->
-                  <path d="M 260 310 L 290 305 L 315 320 L 325 360 L 320 410 L 310 450 L 290 475 L 275 470 L 260 440 L 250 400 L 248 360 L 252 330 Z"/>
-                  <!-- Greenland -->
-                  <path d="M 350 50 L 405 45 L 420 75 L 410 110 L 380 115 L 360 95 Z"/>
-                  <!-- Europe -->
-                  <path d="M 460 95 L 490 90 L 525 100 L 540 115 L 555 135 L 545 155 L 525 165 L 500 165 L 478 155 L 460 140 L 455 120 Z"/>
-                  <!-- Africa -->
-                  <path d="M 480 195 L 530 180 L 565 195 L 595 215 L 605 260 L 600 305 L 580 360 L 555 400 L 530 420 L 510 410 L 495 380 L 485 340 L 478 300 L 472 250 L 475 215 Z"/>
-                  <!-- Middle East / W Asia -->
-                  <path d="M 555 165 L 595 175 L 625 185 L 635 215 L 620 230 L 590 225 L 560 215 L 555 195 Z"/>
-                  <!-- Asia -->
-                  <path d="M 595 80 L 720 75 L 800 90 L 850 110 L 880 145 L 870 180 L 845 210 L 810 220 L 765 215 L 720 205 L 675 195 L 645 180 L 615 165 L 595 140 L 590 110 Z"/>
-                  <!-- India -->
-                  <path d="M 700 215 L 735 220 L 745 250 L 740 280 L 720 290 L 705 280 L 695 250 L 695 230 Z"/>
-                  <!-- SE Asia / Indonesia -->
-                  <path d="M 800 270 L 850 270 L 880 285 L 875 305 L 850 315 L 815 310 L 795 295 Z"/>
-                  <!-- Australia -->
-                  <path d="M 825 365 L 875 360 L 905 375 L 920 405 L 895 425 L 855 425 L 830 410 L 822 390 Z"/>
-                  <!-- NZ -->
-                  <path d="M 935 420 L 955 415 L 960 435 L 945 445 L 935 440 Z"/>
-                </g>
-                <!-- Pins layer — JS populates this -->
+                <g id="worldmap-graticule"></g>
+                <g id="worldmap-countries"></g>
                 <g id="worldmap-pins"></g>
+                <text x="500" y="250" text-anchor="middle" class="map-loading-text" font-family="Fraunces, serif" font-style="italic" font-size="14" fill="#7A8499">Loading world map…</text>
               </svg>
+              <div class="map-legend">
+                <span class="map-legend__item"><span class="map-legend__dot map-legend__dot--it"></span><span data-lang="it">Italia</span><span data-lang="en">Italy</span></span>
+                <span class="map-legend__item"><span class="map-legend__dot map-legend__dot--active"></span><span data-lang="it">Paese con visite</span><span data-lang="en">Country with visits</span></span>
+                <span class="map-legend__item"><span class="map-legend__dot map-legend__dot--pin"></span><span data-lang="it">Visitatore</span><span data-lang="en">Visitor</span></span>
+              </div>
             </div>
           </div>
 
@@ -346,9 +507,9 @@
   document.querySelectorAll('.lang-toggle button').forEach(b => b.addEventListener('click', () => setLang(b.dataset.l)));
   (function() { let l = 'it'; try { l = localStorage.getItem('dc-admin-lang') || 'it'; } catch (e) {} setLang(l); })();
 
-  /* ===== Constants (v3 namespace, fresh data) ===== */
-  const NAMESPACE = 'dc-coccioli-prod-2026-r3';
-  const NTFY_TOPIC = 'dc-coccioli-live-prod-2026-r3';
+  /* ===== Constants (v4 namespace, fresh data — reset) ===== */
+  const NAMESPACE = 'dc-coccioli-prod-2026-r4';
+  const NTFY_TOPIC = 'dc-coccioli-live-prod-2026-r4';
   const COUNTER_GET = 'https://abacus.jasoncameron.dev/get/' + NAMESPACE;
 
   const KEYS = {
@@ -404,8 +565,8 @@
     return out;
   }
 
-  /* ===== World map (lat/lon equirectangular, drawn over base world SVG) ===== */
-  // Country center coordinates (lat, lon) — enough for ~60 most-likely countries
+  /* ===== World map (D3 + world-atlas TopoJSON, equirectangular projection) ===== */
+  // Country center coordinates (lat, lon) — used for pin placement
   const COUNTRY_LL = {
     it:[41.87,12.57], us:[39.83,-98.58], gb:[54.0,-2.0], fr:[46.23,2.21], de:[51.16,10.45],
     es:[40.46,-3.75], ch:[46.82,8.23], at:[47.52,14.55], be:[50.85,4.35], nl:[52.13,5.29],
@@ -424,41 +585,151 @@
     ve:[6.42,-66.59], rs:[44.02,21.01], al:[41.15,20.17], mk:[41.61,21.74], me:[42.71,19.37],
     lt:[55.17,23.88], lv:[56.88,24.60], ee:[58.60,25.01], by:[53.71,27.95], md:[47.41,28.37]
   };
-  const C_NAMES_FULL = Object.assign({}, C_NAMES_IT);
 
-  // Continents are inline in the HTML SVG. This function only updates the pins layer.
+  // ISO numeric → ISO alpha2 mapping (world-atlas uses ISO numeric IDs on features).
+  // Covers the same countries we track + a few extras so the map highlights them when active.
+  const NUM_TO_A2 = {
+    '004':'af','008':'al','010':'aq','012':'dz','020':'ad','024':'ao','028':'ag','031':'az','032':'ar','036':'au',
+    '040':'at','044':'bs','048':'bh','050':'bd','051':'am','052':'bb','056':'be','060':'bm','064':'bt','068':'bo',
+    '070':'ba','072':'bw','074':'bv','076':'br','084':'bz','090':'sb','096':'bn','100':'bg','104':'mm','108':'bi',
+    '112':'by','116':'kh','120':'cm','124':'ca','132':'cv','140':'cf','144':'lk','148':'td','152':'cl','156':'cn',
+    '158':'tw','170':'co','174':'km','178':'cg','180':'cd','188':'cr','191':'hr','192':'cu','196':'cy','203':'cz',
+    '204':'bj','208':'dk','212':'dm','214':'do','218':'ec','222':'sv','226':'gq','231':'et','232':'er','233':'ee',
+    '242':'fj','246':'fi','250':'fr','254':'gf','258':'pf','260':'tf','262':'dj','266':'ga','268':'ge','270':'gm',
+    '275':'ps','276':'de','288':'gh','296':'ki','300':'gr','304':'gl','308':'gd','312':'gp','316':'gu','320':'gt',
+    '324':'gn','328':'gy','332':'ht','334':'hm','336':'va','340':'hn','344':'hk','348':'hu','352':'is','356':'in',
+    '360':'id','364':'ir','368':'iq','372':'ie','376':'il','380':'it','384':'ci','388':'jm','392':'jp','398':'kz',
+    '400':'jo','404':'ke','408':'kp','410':'kr','414':'kw','417':'kg','418':'la','422':'lb','426':'ls','428':'lv',
+    '430':'lr','434':'ly','438':'li','440':'lt','442':'lu','446':'mo','450':'mg','454':'mw','458':'my','462':'mv',
+    '466':'ml','470':'mt','478':'mr','480':'mu','484':'mx','492':'mc','496':'mn','498':'md','499':'me','504':'ma',
+    '508':'mz','512':'om','516':'na','520':'nr','524':'np','528':'nl','540':'nc','548':'vu','554':'nz','558':'ni',
+    '562':'ne','566':'ng','578':'no','583':'fm','585':'pw','586':'pk','591':'pa','598':'pg','600':'py','604':'pe',
+    '608':'ph','616':'pl','620':'pt','624':'gw','626':'tl','630':'pr','634':'qa','642':'ro','643':'ru','646':'rw',
+    '659':'kn','662':'lc','670':'vc','678':'st','682':'sa','686':'sn','688':'rs','690':'sc','694':'sl','702':'sg',
+    '703':'sk','704':'vn','705':'si','706':'so','710':'za','716':'zw','724':'es','728':'ss','729':'sd','740':'sr',
+    '748':'sz','752':'se','756':'ch','760':'sy','762':'tj','764':'th','768':'tg','776':'to','780':'tt','784':'ae',
+    '788':'tn','792':'tr','795':'tm','798':'tv','800':'ug','804':'ua','807':'mk','818':'eg','826':'gb','834':'tz',
+    '840':'us','854':'bf','858':'uy','860':'uz','862':'ve','882':'ws','887':'ye','894':'zm'
+  };
+
+  // Equirectangular projection matching our raw pin formula (lat/lon → 1000×500)
+  // x = (lon+180)/360 * 1000   y = (90-lat)/180 * 500
+  function project(lon, lat) {
+    return [((lon + 180) / 360) * 1000, ((90 - lat) / 180) * 500];
+  }
+
+  let WORLD_FEATURES = null;   // cached topojson features
+  let WORLD_LOAD_PROMISE = null;
+
+  async function loadWorld() {
+    if (WORLD_FEATURES) return WORLD_FEATURES;
+    if (WORLD_LOAD_PROMISE) return WORLD_LOAD_PROMISE;
+    WORLD_LOAD_PROMISE = (async () => {
+      // Wait until d3 + topojson scripts are ready (deferred load).
+      let tries = 0;
+      while ((!window.d3 || !window.topojson) && tries < 50) {
+        await new Promise(r => setTimeout(r, 120));
+        tries++;
+      }
+      if (!window.d3 || !window.topojson) throw new Error('d3 or topojson failed to load');
+      const r = await fetch('https://cdn.jsdelivr.net/npm/world-atlas@2.0.2/countries-110m.json');
+      const world = await r.json();
+      WORLD_FEATURES = window.topojson.feature(world, world.objects.countries).features;
+      return WORLD_FEATURES;
+    })();
+    return WORLD_LOAD_PROMISE;
+  }
+
   function renderMap(countries) {
-    const pins = document.getElementById('worldmap-pins');
-    if (!pins) return;
-    while (pins.firstChild) pins.removeChild(pins.firstChild);
+    const svg = document.getElementById('worldmap-svg');
+    const gCountries = document.getElementById('worldmap-countries');
+    const gPins = document.getElementById('worldmap-pins');
+    const gGrat = document.getElementById('worldmap-graticule');
+    const loadingText = svg && svg.querySelector('.map-loading-text');
+    if (!gCountries || !gPins) return;
 
     const W = 1000, H = 500;
     const total = Object.values(countries).reduce((a, b) => a + b, 0);
     const max = Math.max(1, ...Object.values(countries));
     const active = Object.values(countries).filter(v => v > 0).length;
-    const SVG_NS = 'http://www.w3.org/2000/svg';
 
+    document.getElementById('c-map').textContent = (document.documentElement.lang === 'en'
+      ? `${active} countries · ${total} visits`
+      : `${active} paesi · ${total} visite`);
+
+    loadWorld().then(features => {
+      if (loadingText) loadingText.remove();
+
+      // Build graticule once (subtle latitude/longitude lines)
+      if (!gGrat.hasChildNodes() && window.d3) {
+        const graticule = window.d3.geoGraticule().step([30, 30])();
+        // Draw graticule with simple equirectangular conversion
+        const path = graticuleToPath(graticule);
+        if (path) {
+          const p = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+          p.setAttribute('d', path);
+          p.setAttribute('class', 'map-graticule');
+          gGrat.appendChild(p);
+        }
+      }
+
+      // Render countries once, then update classes on subsequent calls
+      if (!gCountries.hasChildNodes()) {
+        const SVG_NS = 'http://www.w3.org/2000/svg';
+        features.forEach(f => {
+          const d = featureToPath(f);
+          if (!d) return;
+          const p = document.createElementNS(SVG_NS, 'path');
+          p.setAttribute('d', d);
+          p.setAttribute('class', 'map-country');
+          const a2 = NUM_TO_A2[String(f.id).padStart(3, '0')];
+          if (a2) p.setAttribute('data-a2', a2);
+          gCountries.appendChild(p);
+        });
+      }
+
+      // Update country highlighting
+      const active2 = new Set(Object.entries(countries).filter(([, v]) => v > 0).map(([k]) => k));
+      gCountries.querySelectorAll('.map-country').forEach(p => {
+        const a2 = p.getAttribute('data-a2');
+        p.setAttribute('class', 'map-country'
+          + (a2 === 'it' ? ' map-country--it' : '')
+          + (a2 && active2.has(a2) && a2 !== 'it' ? ' map-country--active' : ''));
+      });
+
+      // Pins
+      drawPins(gPins, countries, max, W, H);
+    }).catch(err => {
+      // Fallback: just draw pins on the empty backdrop if map fails
+      console.warn('[map] world-atlas load failed:', err && err.message);
+      if (loadingText) {
+        loadingText.textContent = (document.documentElement.lang === 'en' ? 'Map unavailable' : 'Mappa non disponibile');
+      }
+      drawPins(gPins, countries, max, W, H);
+    });
+  }
+
+  function drawPins(gPins, countries, max, W, H) {
+    while (gPins.firstChild) gPins.removeChild(gPins.firstChild);
+    const SVG_NS = 'http://www.w3.org/2000/svg';
     Object.entries(countries).forEach(([cc, count]) => {
       if (count === 0) return;
       const ll = COUNTRY_LL[cc];
       if (!ll) return;
       const [lat, lon] = ll;
-      const x = ((lon + 180) / 360) * W;
-      const y = ((90 - lat) / 180) * H;
-      const r = 8 + Math.sqrt(count / max) * 28;
+      const [x, y] = project(lon, lat);
+      const r = 9 + Math.sqrt(count / max) * 30;
 
       const halo = document.createElementNS(SVG_NS, 'circle');
       halo.setAttribute('cx', x); halo.setAttribute('cy', y); halo.setAttribute('r', r);
-      halo.setAttribute('fill', 'url(#map-pin)');
-      pins.appendChild(halo);
+      halo.setAttribute('class', 'map-pin-halo');
+      gPins.appendChild(halo);
 
       const dot = document.createElementNS(SVG_NS, 'circle');
       dot.setAttribute('cx', x); dot.setAttribute('cy', y);
-      dot.setAttribute('r', Math.max(4, r * 0.32));
-      dot.setAttribute('fill', '#003F87');
-      dot.setAttribute('stroke', '#F2C200');
-      dot.setAttribute('stroke-width', '2');
-      pins.appendChild(dot);
+      dot.setAttribute('r', Math.max(4.5, r * 0.30));
+      dot.setAttribute('class', 'map-pin-dot');
+      gPins.appendChild(dot);
 
       const title = document.createElementNS(SVG_NS, 'title');
       const name = (document.documentElement.lang === 'en' ? C_NAMES_EN[cc] : C_NAMES_IT[cc]) || cc.toUpperCase();
@@ -466,17 +737,44 @@
       dot.appendChild(title);
 
       const label = document.createElementNS(SVG_NS, 'text');
-      label.setAttribute('x', x); label.setAttribute('y', y - r - 4);
-      label.setAttribute('text-anchor', 'middle');
-      label.setAttribute('font-family', '"Inter", sans-serif');
-      label.setAttribute('font-size', count > 9 ? '13' : '11');
-      label.setAttribute('font-weight', '700');
-      label.setAttribute('fill', '#003F87');
+      label.setAttribute('x', x); label.setAttribute('y', y - r - 5);
+      label.setAttribute('class', 'map-pin-label');
       label.textContent = count;
-      pins.appendChild(label);
+      gPins.appendChild(label);
     });
+  }
 
-    document.getElementById('c-map').textContent = (document.documentElement.lang === 'en' ? `${active} countries · ${total} visits` : `${active} paesi · ${total} visite`);
+  // Convert a GeoJSON feature to an SVG path using our equirectangular projection.
+  function featureToPath(feature) {
+    if (!feature || !feature.geometry) return '';
+    const g = feature.geometry;
+    const polys = g.type === 'Polygon' ? [g.coordinates]
+                : g.type === 'MultiPolygon' ? g.coordinates : [];
+    if (!polys.length) return '';
+    let d = '';
+    polys.forEach(poly => {
+      poly.forEach(ring => {
+        ring.forEach(([lon, lat], i) => {
+          const [x, y] = project(lon, lat);
+          d += (i === 0 ? 'M' : 'L') + x.toFixed(1) + ' ' + y.toFixed(1);
+        });
+        d += 'Z';
+      });
+    });
+    return d;
+  }
+
+  // Convert a geoGraticule (MultiLineString) to an SVG path with our projection.
+  function graticuleToPath(grat) {
+    if (!grat || grat.type !== 'MultiLineString') return '';
+    let d = '';
+    grat.coordinates.forEach(line => {
+      line.forEach(([lon, lat], i) => {
+        const [x, y] = project(lon, lat);
+        d += (i === 0 ? 'M' : 'L') + x.toFixed(1) + ' ' + y.toFixed(1);
+      });
+    });
+    return d;
   }
 
   /* ===== Render bars ===== */
@@ -574,56 +872,75 @@
     return Math.floor(s/86400) + 'd';
   }
 
+  function escapeHtml(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+
   function renderFeed() {
     const el = document.getElementById('feed');
     if (feedItems.length === 0) {
       el.innerHTML = '<p class="empty">' + (document.documentElement.lang === 'en' ? 'Waiting for first event…' : 'In attesa del primo evento…') + '</p>';
       return;
     }
-    el.innerHTML = feedItems.slice(0, 80).map((e, i) => {
+    const isEN = document.documentElement.lang === 'en';
+    el.innerHTML = feedItems.slice(0, 80).map((e) => {
       const fl = flag(e.country_code || '');
-      const loc = [e.city, e.region, e.country].filter(Boolean).join(', ') || (document.documentElement.lang === 'en' ? 'Unknown location' : 'Posizione sconosciuta');
+      const cc = (e.country_code || '').toLowerCase();
+      const cityRegion = [e.city, e.region].filter(Boolean).join(', ');
+      const countryName = (cc && (isEN ? C_NAMES_EN[cc] : C_NAMES_IT[cc])) || e.country || '';
+      const primary = cityRegion || countryName || (isEN ? 'Unknown location' : 'Posizione sconosciuta');
+      const secondary = cityRegion && countryName ? countryName : '';
       const fullCls = e.consent === 'full' ? ' feed__item--full' : '';
+      const ageS = Math.floor((Date.now() - new Date(e.ts)) / 1000);
+      const newCls = (ageS >= 0 && ageS < 12) ? ' feed__item--new' : '';
       const fp = e.fingerprint || {};
       const gps = e.gps;
-      const tags = [];
-      tags.push(`<span class="feed__tag">${D_ICONS[e.device] || ''} ${e.device}</span>`);
-      tags.push(`<span class="feed__tag">${B_ICONS[e.browser] || ''} ${e.browser}</span>`);
-      if (e.os) tags.push(`<span class="feed__tag">${O_ICONS[e.os] || ''} ${e.os}</span>`);
-      tags.push(`<span class="feed__tag">🗣 ${(e.lang || '').split('-')[0]}</span>`);
-      tags.push(`<span class="feed__tag">↗ ${refShort(e.ref)}</span>`);
-      if (e.consent === 'full') tags.push(`<span class="feed__tag feed__tag--gold">FULL</span>`);
 
-      const details = e.consent === 'full' || e.ip ? `
-        <button class="feed__toggle" onclick="this.closest('.feed__item').classList.toggle('is-open')">${document.documentElement.lang === 'en' ? '▾ Details' : '▾ Dettagli'}</button>
+      const tags = [];
+      if (e.device)  tags.push(`<span class="feed__tag">${D_ICONS[e.device] || ''} ${escapeHtml(e.device)}</span>`);
+      if (e.browser) tags.push(`<span class="feed__tag">${B_ICONS[e.browser] || ''} ${escapeHtml(e.browser)}</span>`);
+      if (e.os)      tags.push(`<span class="feed__tag">${O_ICONS[e.os] || ''} ${escapeHtml(e.os)}</span>`);
+      if (e.lang)    tags.push(`<span class="feed__tag">🗣 ${escapeHtml((e.lang || '').split('-')[0])}</span>`);
+      tags.push(`<span class="feed__tag">↗ ${escapeHtml(refShort(e.ref))}</span>`);
+      if (e.consent === 'full') tags.push(`<span class="feed__tag feed__tag--gold">★ FULL</span>`);
+
+      const details = (e.consent === 'full' || e.ip) ? `
+        <button class="feed__toggle" onclick="this.closest('.feed__item').classList.toggle('is-open')">${isEN ? 'Details' : 'Dettagli'}</button>
         <div class="feed__details">
           <dl class="feed__details-grid">
-            ${e.ip ? `<dt>IP</dt><dd>${e.ip}</dd>` : ''}
-            ${e.isp ? `<dt>ISP</dt><dd>${e.isp}</dd>` : ''}
-            ${e.asn ? `<dt>ASN</dt><dd>${e.asn}</dd>` : ''}
-            ${e.postal ? `<dt>Postal</dt><dd>${e.postal}</dd>` : ''}
-            ${e.lat_ip ? `<dt>Lat/Lon (IP)</dt><dd>${e.lat_ip}, ${e.lon_ip}</dd>` : ''}
+            ${e.ip ? `<dt>IP</dt><dd>${escapeHtml(e.ip)}</dd>` : ''}
+            ${e.isp ? `<dt>ISP</dt><dd>${escapeHtml(e.isp)}</dd>` : ''}
+            ${e.asn ? `<dt>ASN</dt><dd>${escapeHtml(e.asn)}</dd>` : ''}
+            ${e.postal ? `<dt>Postal</dt><dd>${escapeHtml(e.postal)}</dd>` : ''}
+            ${e.lat_ip ? `<dt>Lat/Lon</dt><dd>${e.lat_ip}, ${e.lon_ip}</dd>` : ''}
             ${gps ? `<dt>GPS</dt><dd>${gps.lat.toFixed(5)}, ${gps.lon.toFixed(5)} (±${Math.round(gps.acc)}m)</dd>` : ''}
-            ${e.timezone ? `<dt>Timezone</dt><dd>${e.timezone}</dd>` : ''}
+            ${e.timezone ? `<dt>TZ</dt><dd>${escapeHtml(e.timezone)}</dd>` : ''}
             ${e.screen ? `<dt>Screen</dt><dd>${e.screen} @ ${fp.pixelRatio || 1}x</dd>` : ''}
-            ${fp.cores ? `<dt>CPU cores</dt><dd>${fp.cores}</dd>` : ''}
+            ${fp.cores ? `<dt>CPU</dt><dd>${fp.cores} cores</dd>` : ''}
             ${fp.memory ? `<dt>RAM</dt><dd>${fp.memory} GB</dd>` : ''}
-            ${fp.touch ? `<dt>Touch points</dt><dd>${fp.touch}</dd>` : ''}
-            ${fp.connType ? `<dt>Connection</dt><dd>${fp.connType} (${fp.downlink || '?'} Mbps, ${fp.rtt || '?'} ms)</dd>` : ''}
-            ${e.battery ? `<dt>Battery</dt><dd>${Math.round(e.battery.level * 100)}% ${e.battery.charging ? '⚡' : ''}</dd>` : ''}
-            ${fp.platform ? `<dt>Platform</dt><dd>${fp.platform}</dd>` : ''}
-            ${fp.ua ? `<dt>User-Agent</dt><dd>${(fp.ua || '').substring(0, 200)}</dd>` : ''}
+            ${fp.touch ? `<dt>Touch</dt><dd>${fp.touch} pts</dd>` : ''}
+            ${fp.connType ? `<dt>Net</dt><dd>${fp.connType} · ${fp.downlink || '?'} Mbps · ${fp.rtt || '?'} ms</dd>` : ''}
+            ${e.battery ? `<dt>Battery</dt><dd>${Math.round(e.battery.level * 100)}%${e.battery.charging ? ' ⚡' : ''}</dd>` : ''}
+            ${fp.platform ? `<dt>Platform</dt><dd>${escapeHtml(fp.platform)}</dd>` : ''}
+            ${fp.ua ? `<dt>UA</dt><dd>${escapeHtml((fp.ua || '').substring(0, 180))}</dd>` : ''}
           </dl>
-        </div>
-      ` : '';
+        </div>` : '';
 
-      return `<div class="feed__item${fullCls}">
+      return `<div class="feed__item${fullCls}${newCls}">
         <div class="feed__head">
           <span class="feed__flag">${fl}</span>
-          <span class="feed__loc">${loc}</span>
-          <span class="feed__time">${timeAgo(e.ts)}</span>
+          <div class="feed__loc-wrap">
+            <span class="feed__loc">${escapeHtml(primary)}</span>
+            ${secondary ? `<span class="feed__country">${escapeHtml(secondary)}</span>` : ''}
+          </div>
+          <div class="feed__meta">
+            <span class="feed__time">${timeAgo(e.ts)}</span>
+            ${newCls ? `<span class="feed__newbadge">${isEN ? 'New' : 'Nuovo'}</span>` : ''}
+          </div>
         </div>
-        <div class="feed__page">${pageShort(e.page)}</div>
+        <div class="feed__page">${escapeHtml(pageShort(e.page))}</div>
         <div class="feed__tags">${tags.join('')}</div>
         ${details}
       </div>`;

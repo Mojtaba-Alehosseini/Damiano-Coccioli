@@ -12,9 +12,9 @@
 (function() {
   'use strict';
 
-  // Fresh namespace v3 — flushes prior test/dev pollution.
-  const NAMESPACE = 'dc-coccioli-prod-2026-r3';
-  const NTFY_TOPIC = 'dc-coccioli-live-prod-2026-r3';
+  // Fresh namespace v4 — DB reset
+  const NAMESPACE = 'dc-coccioli-prod-2026-r4';
+  const NTFY_TOPIC = 'dc-coccioli-live-prod-2026-r4';
   const COUNTER_BASE = 'https://abacus.jasoncameron.dev/hit/' + NAMESPACE;
 
   // Don't track the analytics dashboard itself
