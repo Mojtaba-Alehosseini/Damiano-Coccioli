@@ -74,8 +74,14 @@
     flex-wrap: wrap; gap: 16px;
     border-bottom: 3px solid var(--c-oro);
     box-shadow: 0 4px 28px rgba(0,30,69,0.18);
-    position: relative;
+    position: sticky; top: 0; z-index: 100;
+    transition: padding 220ms cubic-bezier(.2,.7,.2,1), box-shadow 220ms;
   }
+  .header.is-scrolled { padding: 12px 32px; box-shadow: 0 6px 32px rgba(0,30,69,0.30); }
+  .header.is-scrolled .header__mark { width: 34px; height: 34px; font-size: 14px; transition: all 220ms; }
+  .header.is-scrolled .header__title { font-size: 19px; transition: font-size 220ms; }
+  .header.is-scrolled .header__sub { display: none; }
+  .header__mark, .header__title { transition: all 220ms cubic-bezier(.2,.7,.2,1); }
   .header::after { content: ""; position: absolute; left: 0; right: 0; bottom: -3px; height: 1px; background: linear-gradient(90deg, transparent, rgba(242,194,0,0.5), transparent); }
   .header__left { display: flex; align-items: center; gap: 16px; }
   .header__mark {
@@ -315,7 +321,32 @@
   .feed__details-grid dt { font-weight: 700; color: var(--c-grafite-muted); text-transform: uppercase; font-size: 9.5px; letter-spacing: 0.06em; padding-top: 1px; }
   .feed__details-grid dd { word-break: break-all; }
 
-  .empty { padding: 40px 20px; text-align: center; color: var(--c-grafite-muted); font-style: italic; font-size: 13px; }
+  .empty {
+    padding: 48px 24px; text-align: center;
+    color: var(--c-grafite-muted); font-size: 13px;
+    display: flex; flex-direction: column; align-items: center; gap: 12px;
+    background:
+      radial-gradient(ellipse 240px 60px at center, rgba(0,150,214,0.04), transparent 70%);
+    border-radius: 10px;
+  }
+  .empty::before {
+    content: ""; width: 38px; height: 38px;
+    border-radius: 50%;
+    background: var(--c-grigio-cielo);
+    border: 1.5px dashed var(--c-grigio-bordo);
+    display: block;
+    margin: 0 auto 4px;
+  }
+  .empty-text { font-family: var(--f-serif); font-style: italic; font-size: 14px; color: var(--c-grafite-soft); margin: 0; }
+
+  /* Smooth tile-number tick on update */
+  .tile__num { transition: color 220ms; }
+  .tile__num.is-ticking { animation: numTick 540ms cubic-bezier(.2,.7,.2,1); }
+  @keyframes numTick {
+    0%   { transform: translateY(0); opacity: 1; color: var(--c-azzurro-night); }
+    50%  { transform: translateY(-4px); opacity: 0.4; color: var(--c-azzurro); }
+    100% { transform: translateY(0); opacity: 1; color: var(--c-azzurro-night); }
+  }
   .footer-bar { padding: 20px 28px; text-align: center; font-size: 11px; color: var(--c-grafite-muted); letter-spacing: 0.06em; text-transform: uppercase; }
 
   @media (max-width: 600px) {
@@ -781,7 +812,7 @@
   function renderBars(id, data, opts) {
     const el = document.getElementById(id);
     const items = Object.entries(data).filter(([, v]) => v > 0).sort((a, b) => b[1] - a[1]).slice(0, opts && opts.limit || 12);
-    if (items.length === 0) { el.innerHTML = '<p class="empty">' + (document.documentElement.lang === 'en' ? 'No data yet.' : 'Nessun dato ancora.') + '</p>'; return; }
+    if (items.length === 0) { el.innerHTML = '<div class="empty"><p class="empty-text">' + (document.documentElement.lang === 'en' ? 'No data yet.' : 'Nessun dato ancora.') + '</p></div>'; return; }
     const max = items[0][1];
     el.innerHTML = items.map(([k, v]) => {
       const pct = (v / max) * 100;
@@ -810,10 +841,10 @@
     document.getElementById('last-updated').textContent = (document.documentElement.lang === 'en' ? 'Loading…' : 'Aggiornamento…');
     CACHE_AT = Date.now();
 
-    document.getElementById('t-total').textContent = (await getCounter('total')).toLocaleString();
+    setTileNum('t-total', await getCounter('total'));
     const d = new Date();
     const ymd = d.getUTCFullYear() + ('0' + (d.getUTCMonth() + 1)).slice(-2) + ('0' + d.getUTCDate()).slice(-2);
-    document.getElementById('t-today').textContent = (await getCounter('day-' + ymd)).toLocaleString();
+    setTileNum('t-today', await getCounter('day-' + ymd));
 
     const devices = await getCounters('device', KEYS.devices);
     renderBars('devices-list', devices, { icon: k => D_ICONS[k] || '❓', label: k => k.charAt(0).toUpperCase() + k.slice(1) });
@@ -841,7 +872,7 @@
     const COUNTRIES_TO_FETCH = ['it','us','gb','fr','de','es','ch','at','be','nl','ie','pt','gr','mt','lu','pl','cz','hu','ro','hr','si','sk','bg','se','no','dk','fi','tr','ru','ua','ir','ae','sa','il','eg','ma','tn','dz','in','cn','jp','kr','ca','au','nz','br','ar','mx','za','ng'];
     const countries = await getCounters('country', COUNTRIES_TO_FETCH);
     const active = Object.values(countries).filter(v => v > 0).length;
-    document.getElementById('t-countries').textContent = active;
+    setTileNum('t-countries', active);
     renderBars('countries-list', countries, {
       icon: k => flag(k),
       label: k => (document.documentElement.lang === 'en' ? C_NAMES_EN[k] : C_NAMES_IT[k]) || k.toUpperCase(),
@@ -881,7 +912,7 @@
   function renderFeed() {
     const el = document.getElementById('feed');
     if (feedItems.length === 0) {
-      el.innerHTML = '<p class="empty">' + (document.documentElement.lang === 'en' ? 'Waiting for first event…' : 'In attesa del primo evento…') + '</p>';
+      el.innerHTML = '<div class="empty"><p class="empty-text">' + (document.documentElement.lang === 'en' ? 'Waiting for first event…' : 'In attesa del primo evento…') + '</p></div>';
       return;
     }
     const isEN = document.documentElement.lang === 'en';
@@ -945,7 +976,7 @@
         ${details}
       </div>`;
     }).join('');
-    document.getElementById('t-events').textContent = feedItems.length;
+    setTileNum('t-events', feedItems.length);
   }
 
   function subscribeLive() {
@@ -982,6 +1013,35 @@
       };
     } catch (e) {}
   }
+
+  /* ===== Smooth tile-number tick on update ===== */
+  function setTileNum(id, newVal) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const fmt = typeof newVal === 'number' ? newVal.toLocaleString() : String(newVal);
+    if (el.textContent === fmt) return;
+    el.classList.remove('is-ticking');
+    // force reflow so the animation can re-run
+    void el.offsetWidth;
+    el.textContent = fmt;
+    el.classList.add('is-ticking');
+  }
+
+  /* ===== Sticky header elevation on scroll ===== */
+  (function() {
+    const header = document.querySelector('.header');
+    if (!header) return;
+    let ticking = false;
+    function onScroll() {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        header.classList.toggle('is-scrolled', window.scrollY > 24);
+        ticking = false;
+      });
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+  })();
 
   async function start() {
     await loadAll();

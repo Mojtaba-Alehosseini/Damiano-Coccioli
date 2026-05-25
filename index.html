@@ -369,6 +369,80 @@
     white-space: nowrap;
   }
 
+  /* ===== Voting-day live service banner ===== */
+  .vote-live {
+    display: flex; align-items: center; gap: clamp(var(--s-4), 2.2vw, var(--s-6));
+    background: linear-gradient(135deg, rgba(242,194,0,0.96) 0%, rgba(255,212,28,0.96) 100%);
+    color: var(--c-azzurro-night);
+    padding: clamp(var(--s-4), 2.4vw, var(--s-6)) clamp(var(--s-5), 3vw, var(--s-7));
+    border-radius: var(--r-16);
+    box-shadow:
+      0 14px 38px rgba(0,30,69,0.30),
+      inset 0 1px 0 rgba(255,255,255,0.45),
+      inset 0 -1px 0 rgba(150,90,0,0.18);
+    max-width: 820px;
+    margin: 0 auto;
+    position: relative;
+    overflow: hidden;
+  }
+  .vote-live::after {
+    content: ""; position: absolute; inset: 0;
+    background: radial-gradient(ellipse 600px 180px at 90% 110%, rgba(255,255,255,0.30), transparent 60%);
+    pointer-events: none;
+  }
+  .vote-live__pulse {
+    flex-shrink: 0;
+    width: 14px; height: 14px;
+    background: #DA1E2C; border-radius: 50%;
+    box-shadow: 0 0 0 0 rgba(218,30,44,0.55);
+    animation: votePulse 1.6s ease-out infinite;
+  }
+  @keyframes votePulse {
+    0%   { box-shadow: 0 0 0 0 rgba(218,30,44,0.55); }
+    70%  { box-shadow: 0 0 0 14px rgba(218,30,44,0); }
+    100% { box-shadow: 0 0 0 0 rgba(218,30,44,0); }
+  }
+  .vote-live__body { flex: 1; min-width: 0; position: relative; z-index: 1; }
+  .vote-live__lead {
+    font-family: var(--f-sans);
+    font-size: var(--t-12);
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(0,30,69,0.70);
+    margin: 0 0 var(--s-1);
+  }
+  .vote-live__day {
+    font-family: var(--f-display);
+    font-size: clamp(var(--t-28), 4.4vw, var(--t-44));
+    line-height: 1;
+    margin: 0 0 var(--s-3);
+    letter-spacing: -0.02em;
+    color: var(--c-azzurro-night);
+  }
+  .vote-live__hours {
+    display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-4);
+    font-family: var(--f-sans);
+    font-size: clamp(var(--t-14), 1.5vw, var(--t-16));
+    font-weight: 600;
+    color: var(--c-azzurro-night);
+  }
+  .vote-live__hours strong { font-weight: 800; }
+  .vote-live__sep { opacity: 0.40; font-weight: 400; }
+  .vote-live__cta {
+    margin: var(--s-3) 0 0;
+    font-family: var(--f-sans);
+    font-size: var(--t-12);
+    color: rgba(0,30,69,0.70);
+    font-weight: 500;
+    letter-spacing: 0.02em;
+  }
+  @media (max-width: 560px) {
+    .vote-live { flex-direction: row; align-items: flex-start; padding: var(--s-4) var(--s-5); }
+    .vote-live__pulse { margin-top: 4px; }
+    .vote-live__hours { font-size: var(--t-13); }
+  }
+
   /* Countdown */
   .hero__countdown {
     position: relative; z-index: 2;
@@ -1026,7 +1100,20 @@
           <div class="countdown__cell"><span class="countdown__num" id="cd-m">00</span><span class="countdown__lbl" data-i18n="hero.cd_mins">min</span></div>
           <div class="countdown__cell"><span class="countdown__num" id="cd-s">00</span><span class="countdown__lbl" data-i18n="hero.cd_secs">sec</span></div>
         </div>
-        <span id="countdown-live" class="countdown__live" hidden data-i18n="hero.live">Seggi aperti — Vai a votare</span>
+
+        <div id="vote-live-banner" class="vote-live" role="status" aria-live="polite" hidden>
+          <span class="vote-live__pulse" aria-hidden="true"></span>
+          <div class="vote-live__body">
+            <p class="vote-live__lead" data-i18n="hero.vote_now_lead">Seggi aperti · si vota</p>
+            <p class="vote-live__day" id="vote-live-day" data-i18n="hero.vote_now_today">OGGI</p>
+            <div class="vote-live__hours" aria-label="Orari di voto">
+              <span><strong data-i18n="hero.vote_sun">Dom 24/5</strong> <span>07:00 – 23:00</span></span>
+              <span class="vote-live__sep" aria-hidden="true">·</span>
+              <span><strong data-i18n="hero.vote_mon">Lun 25/5</strong> <span>07:00 – 15:00</span></span>
+            </div>
+            <p class="vote-live__cta" data-i18n="hero.vote_now_cta">Porta tessera elettorale + documento d'identità · vai al tuo seggio</p>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -1170,7 +1257,7 @@
             <div class="person__body">
               <p class="person__role" data-i18n="squadra.role_sindaco">Candidato Sindaco · Centrodestra</p>
               <h3 class="person__name">Maurizio Fontana</h3>
-              <p class="person__bio">Imprenditore, sostenuto dalla coalizione di centrodestra unita: Forza Italia, Fratelli d'Italia, Lega, UDC, Noi Moderati. La svolta per Moncalieri dopo decenni della stessa amministrazione.</p>
+              <p class="person__bio">Imprenditore moncalierese (Pasticcerie Daf · Dolciaria Fontana), sostenuto dalla coalizione di centrodestra unita: Forza Italia, Fratelli d'Italia, Lega, UDC, Noi Moderati. La svolta per Moncalieri dopo decenni della stessa amministrazione.</p>
               <div class="person__tags">
                 <span class="tag tag--gold">Sindaco</span>
                 <span class="tag">Centrodestra</span>
@@ -1740,6 +1827,11 @@
         'hero.cd_mins': 'min',
         'hero.cd_secs': 'sec',
         'hero.live': 'Seggi aperti — Vai a votare',
+        'hero.vote_now_lead': 'Seggi aperti · si vota',
+        'hero.vote_now_today': 'OGGI',
+        'hero.vote_now_cta': 'Porta tessera elettorale + documento d’identità · vai al tuo seggio',
+        'hero.vote_sun': 'Dom 24/5',
+        'hero.vote_mon': 'Lun 25/5',
         'chi.eyebrow': 'Chi sono',
         'manifesto.eyebrow': 'Manifesto',
         'manifesto.title': 'Una giovane prospettiva.',
@@ -1840,6 +1932,11 @@
         'hero.cd_mins': 'min',
         'hero.cd_secs': 'sec',
         'hero.live': 'Polls open — Go vote',
+        'hero.vote_now_lead': 'Polls open · voting now',
+        'hero.vote_now_today': 'TODAY',
+        'hero.vote_now_cta': 'Bring your voter card + photo ID · go to your polling station',
+        'hero.vote_sun': 'Sun 24/5',
+        'hero.vote_mon': 'Mon 25/5',
         'chi.eyebrow': 'About',
         'manifesto.eyebrow': 'Manifesto',
         'manifesto.title': 'A young perspective.',
@@ -1940,6 +2037,11 @@
         'hero.cd_mins': 'min',
         'hero.cd_secs': 'sec',
         'hero.live': 'Bureaux ouverts — Allez voter',
+        'hero.vote_now_lead': 'Bureaux ouverts · scrutin en cours',
+        'hero.vote_now_today': 'AUJOURD’HUI',
+        'hero.vote_now_cta': 'Apportez votre carte d’électeur + pièce d’identité · rendez-vous à votre bureau',
+        'hero.vote_sun': 'Dim 24/5',
+        'hero.vote_mon': 'Lun 25/5',
         'chi.eyebrow': 'À propos',
         'manifesto.eyebrow': 'Manifeste',
         'manifesto.title': 'Une jeune perspective.',
@@ -2040,6 +2142,11 @@
         'hero.cd_mins': 'Min',
         'hero.cd_secs': 'Sek',
         'hero.live': 'Wahllokale offen — Wählen gehen',
+        'hero.vote_now_lead': 'Wahllokale offen · Wahl läuft',
+        'hero.vote_now_today': 'HEUTE',
+        'hero.vote_now_cta': 'Wahlkarte + Ausweis mitbringen · zum Wahllokal gehen',
+        'hero.vote_sun': 'So 24/5',
+        'hero.vote_mon': 'Mo 25/5',
         'chi.eyebrow': 'Über mich',
         'manifesto.eyebrow': 'Manifest',
         'manifesto.title': 'Eine junge Perspektive.',
@@ -2144,40 +2251,80 @@
       if (saved !== 'it') setLang(saved);
     })();
 
-    /* ============== Countdown ============== */
+    /* ============== Countdown + voting-day live banner ============== */
     const TARGET = new Date('2026-05-24T07:00:00+02:00').getTime();
+    const SUN_END = new Date('2026-05-24T23:00:00+02:00').getTime();
+    const MON_START = new Date('2026-05-25T07:00:00+02:00').getTime();
     const END = new Date('2026-05-25T15:00:00+02:00').getTime();
     const cdDays = document.getElementById('cd-d');
     const cdHours = document.getElementById('cd-h');
     const cdMins = document.getElementById('cd-m');
     const cdSecs = document.getElementById('cd-s');
-    const liveEl = document.getElementById('countdown-live');
+    const voteLive = document.getElementById('vote-live-banner');
+    const voteLiveDay = document.getElementById('vote-live-day');
     const countdownEl = document.getElementById('countdown');
+    const countdownLeadEl = document.querySelector('.countdown__lead');
+
+    // i18n labels for the live-day text (changes per language + day)
+    function liveDayText(state) {
+      const lang = document.documentElement.lang || 'it';
+      const M = {
+        it: { open: 'SI VOTA OGGI', last: 'ULTIMO GIORNO DI VOTO', closed: 'SEGGI CHIUSI' },
+        en: { open: 'VOTING TODAY',  last: 'FINAL DAY OF VOTING',  closed: 'POLLS CLOSED' },
+        fr: { open: 'ON VOTE AUJOURD’HUI', last: 'DERNIER JOUR DE VOTE', closed: 'BUREAUX FERMÉS' },
+        de: { open: 'HEUTE WIRD GEWÄHLT', last: 'LETZTER WAHLTAG', closed: 'WAHL BEENDET' },
+      };
+      const dict = M[lang] || M.it;
+      return dict[state] || dict.open;
+    }
+
     function tick() {
       const now = Date.now();
-      const diff = TARGET - now;
-      if (now >= TARGET && now <= END) {
+
+      // State 1: before voting opens — countdown visible
+      if (now < TARGET) {
+        if (countdownEl) countdownEl.hidden = false;
+        if (countdownLeadEl) countdownLeadEl.hidden = false;
+        if (voteLive) voteLive.hidden = true;
+        const diff = TARGET - now;
+        const d = Math.floor(diff / 86400000);
+        const h = Math.floor((diff % 86400000) / 3600000);
+        const m = Math.floor((diff % 3600000) / 60000);
+        const s = Math.floor((diff % 60000) / 1000);
+        if (cdDays) cdDays.textContent = String(d).padStart(2, '0');
+        if (cdHours) cdHours.textContent = String(h).padStart(2, '0');
+        if (cdMins) cdMins.textContent = String(m).padStart(2, '0');
+        if (cdSecs) cdSecs.textContent = String(s).padStart(2, '0');
+        return;
+      }
+
+      // State 2: voting window (Sunday 07:00 — Monday 15:00) — show service banner
+      if (now <= END) {
         if (countdownEl) countdownEl.hidden = true;
-        if (liveEl) liveEl.hidden = false;
+        if (countdownLeadEl) countdownLeadEl.hidden = true;
+        if (voteLive) voteLive.hidden = false;
+        if (voteLiveDay) {
+          // Sunday open: "SI VOTA OGGI" — Monday open: "ULTIMO GIORNO DI VOTO"
+          // (between Sunday 23:00 and Monday 07:00 still show "ULTIMO GIORNO" as next phase)
+          voteLiveDay.textContent = liveDayText(now >= MON_START - 8*3600*1000 && now < MON_START ? 'last' : (now >= MON_START ? 'last' : 'open'));
+        }
         return;
       }
-      if (diff <= 0) {
-        if (cdDays) cdDays.textContent = '00';
-        if (cdHours) cdHours.textContent = '00';
-        if (cdMins) cdMins.textContent = '00';
-        if (cdSecs) cdSecs.textContent = '00';
-        return;
+
+      // State 3: voting closed
+      if (countdownEl) countdownEl.hidden = true;
+      if (countdownLeadEl) countdownLeadEl.hidden = true;
+      if (voteLive) {
+        voteLive.hidden = false;
+        if (voteLiveDay) voteLiveDay.textContent = liveDayText('closed');
+        const pulse = voteLive.querySelector('.vote-live__pulse');
+        if (pulse) pulse.style.animation = 'none';
       }
-      const d = Math.floor(diff / 86400000);
-      const h = Math.floor((diff % 86400000) / 3600000);
-      const m = Math.floor((diff % 3600000) / 60000);
-      const s = Math.floor((diff % 60000) / 1000);
-      if (cdDays) cdDays.textContent = String(d).padStart(2, '0');
-      if (cdHours) cdHours.textContent = String(h).padStart(2, '0');
-      if (cdMins) cdMins.textContent = String(m).padStart(2, '0');
-      if (cdSecs) cdSecs.textContent = String(s).padStart(2, '0');
     }
     tick(); setInterval(tick, 1000);
+
+    // Re-tick on language change so banner labels update immediately
+    window.addEventListener('dc:lang-changed', tick);
 
     /* ============== Mobile menu ============== */
     const hamburger = document.getElementById('hamburger');
