@@ -2268,17 +2268,50 @@
     const countdownEl = document.getElementById('countdown');
     const countdownLeadEl = document.querySelector('.countdown__lead');
 
-    // i18n labels for the live-day text (changes per language + day)
-    function liveDayText(state) {
+    // i18n labels for the live-day text (changes per language + state)
+    const LIVE_COPY = {
+      it: {
+        open:   { lead: 'Seggi aperti · si vota', day: 'SI VOTA OGGI',     cta: 'Porta tessera elettorale + documento d’identità · vai al tuo seggio' },
+        last:   { lead: 'Seggi aperti · si vota', day: 'ULTIMO GIORNO DI VOTO', cta: 'Vai al tuo seggio entro le 15:00' },
+        closed: { lead: 'Votazioni concluse',     day: 'GRAZIE A CHI HA VOTATO', cta: 'Risultati ufficiali sul sito del Ministero dell’Interno' },
+      },
+      en: {
+        open:   { lead: 'Polls open · voting now', day: 'VOTING TODAY',     cta: 'Bring your voter card + photo ID · go to your polling station' },
+        last:   { lead: 'Polls open · voting now', day: 'FINAL DAY OF VOTING', cta: 'Get to your polling station by 15:00' },
+        closed: { lead: 'Voting concluded',        day: 'THANK YOU FOR VOTING', cta: 'Official results: Italian Ministry of Interior' },
+      },
+      fr: {
+        open:   { lead: 'Bureaux ouverts · scrutin en cours', day: 'ON VOTE AUJOURD’HUI', cta: 'Apportez votre carte d’électeur + pièce d’identité · rendez-vous à votre bureau' },
+        last:   { lead: 'Bureaux ouverts · scrutin en cours', day: 'DERNIER JOUR DE VOTE', cta: 'Rejoignez votre bureau avant 15:00' },
+        closed: { lead: 'Scrutin terminé',                    day: 'MERCI AUX ÉLECTEURS', cta: 'Résultats officiels : Ministère de l’Intérieur italien' },
+      },
+      de: {
+        open:   { lead: 'Wahllokale offen · Wahl läuft', day: 'HEUTE WIRD GEWÄHLT', cta: 'Wahlkarte + Ausweis mitbringen · zum Wahllokal gehen' },
+        last:   { lead: 'Wahllokale offen · Wahl läuft', day: 'LETZTER WAHLTAG',    cta: 'Bis 15:00 ins Wahllokal' },
+        closed: { lead: 'Wahl beendet',                  day: 'DANKE AN ALLE WÄHLER', cta: 'Offizielle Ergebnisse: Italienisches Innenministerium' },
+      },
+    };
+    function liveCopy(state) {
       const lang = document.documentElement.lang || 'it';
-      const M = {
-        it: { open: 'SI VOTA OGGI', last: 'ULTIMO GIORNO DI VOTO', closed: 'SEGGI CHIUSI' },
-        en: { open: 'VOTING TODAY',  last: 'FINAL DAY OF VOTING',  closed: 'POLLS CLOSED' },
-        fr: { open: 'ON VOTE AUJOURD’HUI', last: 'DERNIER JOUR DE VOTE', closed: 'BUREAUX FERMÉS' },
-        de: { open: 'HEUTE WIRD GEWÄHLT', last: 'LETZTER WAHLTAG', closed: 'WAHL BEENDET' },
-      };
-      const dict = M[lang] || M.it;
+      const dict = LIVE_COPY[lang] || LIVE_COPY.it;
       return dict[state] || dict.open;
+    }
+
+    const voteLiveLeadEl = voteLive ? voteLive.querySelector('.vote-live__lead') : null;
+    const voteLiveCtaEl = voteLive ? voteLive.querySelector('.vote-live__cta') : null;
+    const voteLivePulseEl = voteLive ? voteLive.querySelector('.vote-live__pulse') : null;
+
+    function applyLiveState(state) {
+      if (!voteLive) return;
+      voteLive.hidden = false;
+      const copy = liveCopy(state);
+      if (voteLiveLeadEl) voteLiveLeadEl.textContent = copy.lead;
+      if (voteLiveDay)    voteLiveDay.textContent = copy.day;
+      if (voteLiveCtaEl)  voteLiveCtaEl.textContent = copy.cta;
+      if (voteLivePulseEl) {
+        voteLivePulseEl.style.animation = state === 'closed' ? 'none' : '';
+        voteLivePulseEl.style.background = state === 'closed' ? 'rgba(0,30,69,0.30)' : '';
+      }
     }
 
     function tick() {
@@ -2305,24 +2338,15 @@
       if (now <= END) {
         if (countdownEl) countdownEl.hidden = true;
         if (countdownLeadEl) countdownLeadEl.hidden = true;
-        if (voteLive) voteLive.hidden = false;
-        if (voteLiveDay) {
-          // Sunday open: "SI VOTA OGGI" — Monday open: "ULTIMO GIORNO DI VOTO"
-          // (between Sunday 23:00 and Monday 07:00 still show "ULTIMO GIORNO" as next phase)
-          voteLiveDay.textContent = liveDayText(now >= MON_START - 8*3600*1000 && now < MON_START ? 'last' : (now >= MON_START ? 'last' : 'open'));
-        }
+        // Use "last" copy from Monday onward (incl. the Sun 23:00 → Mon 07:00 break)
+        applyLiveState(now >= MON_START - 8*3600*1000 ? 'last' : 'open');
         return;
       }
 
-      // State 3: voting closed
+      // State 3: voting closed → grazie / results pointer
       if (countdownEl) countdownEl.hidden = true;
       if (countdownLeadEl) countdownLeadEl.hidden = true;
-      if (voteLive) {
-        voteLive.hidden = false;
-        if (voteLiveDay) voteLiveDay.textContent = liveDayText('closed');
-        const pulse = voteLive.querySelector('.vote-live__pulse');
-        if (pulse) pulse.style.animation = 'none';
-      }
+      applyLiveState('closed');
     }
     tick(); setInterval(tick, 1000);
 
