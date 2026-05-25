@@ -369,6 +369,9 @@
     white-space: nowrap;
   }
 
+  /* HTML [hidden] must always win over flex layouts */
+  [hidden] { display: none !important; }
+
   /* ===== Voting-day live service banner ===== */
   .vote-live {
     display: flex; align-items: center; gap: clamp(var(--s-4), 2.2vw, var(--s-6));
