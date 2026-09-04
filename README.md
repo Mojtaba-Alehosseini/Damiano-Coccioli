@@ -1,4 +1,4 @@
-# Damiano Coccioli — Sito di campagna
+# Damiano Coccioli: Sito di campagna
 
 Sito di campagna elettorale per **Damiano Coccioli**, candidato al Consiglio Comunale di Moncalieri (Torino) con **Forza Italia**, alle elezioni amministrative del **24–25 maggio 2026**.
 
@@ -8,11 +8,11 @@ Sito di campagna elettorale per **Damiano Coccioli**, candidato al Consiglio Com
 
 ## Pagine principali
 
-- **Home** — biografia, manifesto, squadra, programma, voto
-- **Come votare** — guida ai 3 passaggi per il voto di preferenza
-- **Programma completo** (`/programma-completo/`) — i 14 punti del centrodestra
-- **Le priorità di Damiano** (`/programma-coccioli/`) — il suo manifesto personale
-- **Privacy** e **Cookie Policy** — conformità GDPR
+- **Home**: biografia, manifesto, squadra, programma, voto
+- **Come votare**: guida ai 3 passaggi per il voto di preferenza
+- **Programma completo** (`/programma-completo/`): i 14 punti del centrodestra
+- **Le priorità di Damiano** (`/programma-coccioli/`): il suo manifesto personale
+- **Privacy** e **Cookie Policy**: conformità GDPR
 
 ## Lingue supportate
 
@@ -45,4 +45,4 @@ I PDF nel `assets/pdf/` sono generati a partire dai template in `pdf-templates/`
 
 Sito realizzato dal team di campagna per Damiano Coccioli · Maggio 2026.
 
-**Committente responsabile / Mandatario elettorale:** Stefano Delpero — Comitato Forza Italia Moncalieri 2026.
+**Committente responsabile / Mandatario elettorale:** Stefano Delpero, Comitato Forza Italia Moncalieri 2026.
